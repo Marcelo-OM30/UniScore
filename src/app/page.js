@@ -3,12 +3,31 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { auth, db } from "../firebase";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 
 export default function Home() {
   const [search, setSearch] = useState("");
   const [events, setEvents] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [searched, setSearched] = useState(false);
+  const [user, setUser] = useState(null);
+  const [avaliacoes, setAvaliacoes] = useState([]);
+  // Buscar avaliações recentes do Firestore
+  useEffect(() => {
+    const q = query(collection(db, "avaliacoes"), orderBy("criadoEm", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setAvaliacoes(data);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => setUser(u));
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     fetch("/events.json")
@@ -48,8 +67,25 @@ export default function Home() {
           <a href="#" className="hover:underline">Blog</a>
         </nav>
         <div className="flex items-center gap-4">
-          <div className="rounded-full bg-gray-800 w-8 h-8 flex items-center justify-center shadow-sm border border-gray-700 cursor-pointer">👤</div>
+          <a href="/perfil" className="rounded-full bg-gray-800 w-8 h-8 flex items-center justify-center shadow-sm border border-gray-700 cursor-pointer" title="Perfil">
+            {user && user.photoURL ? (
+              <img src={user.photoURL} alt="Avatar" className="w-7 h-7 rounded-full object-cover" />
+            ) : (
+              <span role="img" aria-label="Perfil">👤</span>
+            )}
+          </a>
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full font-semibold text-sm">Para universidades</button>
+          {user && (
+            <button
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-full font-semibold text-sm ml-2"
+              onClick={async () => {
+                await signOut(auth);
+                window.location.href = "/login";
+              }}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </header>
 
@@ -79,8 +115,8 @@ export default function Home() {
         </form>
       </section>
 
-      {/* Event Feed */}
-      <main className="px-4 py-8 max-w-3xl mx-auto">
+      <main className="px-4 py-8 max-w-5xl mx-auto">
+        {/* Event Feed */}
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Eventos encontrados</h2>
         {!searched ? (
           <div className="text-center text-gray-400 py-12">
@@ -106,7 +142,7 @@ export default function Home() {
                         {Array(ev.avaliacao).fill().map((_, i) => <span key={i}>★</span>)}
                         {ev.avaliacao < 5 && Array(5 - ev.avaliacao).fill().map((_, i) => <span key={i} className="text-gray-300">★</span>)}
                       </div>
-                      <div className="text-sm text-gray-500 mt-1">Data: {new Date(ev.data).toLocaleDateString()}</div>
+                      <div className="text-sm text-gray-500 mt-1">Data: {ev.data}</div>
                       <div className="text-sm text-gray-400 mt-1">{ev.universidade}</div>
                       <div className="mt-4 flex gap-2">
                         <Link href={`/evento/${ev.id}`}>
@@ -119,6 +155,39 @@ export default function Home() {
                 </div>
               ))
             )}
+          </div>
+        )}
+
+        {/* Avaliações Recentes - Trustpilot style */}
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center mt-12">Avaliações recentes</h2>
+        {avaliacoes.length === 0 ? (
+          <div className="text-center text-gray-400 py-8">Nenhuma avaliação encontrada.</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {avaliacoes.map(av => (
+              <div key={av.id} className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col">
+                <div className="flex items-center gap-3 mb-2">
+                  {av.avatar ? (
+                    <img src={av.avatar} alt="Avatar" className="rounded-full w-10 h-10 object-cover border border-gray-300" />
+                  ) : (
+                    <div className="rounded-full bg-gray-200 w-10 h-10 flex items-center justify-center text-xl font-bold text-gray-600">
+                      {av.usuario?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
+                  )}
+                  <div className="font-semibold text-gray-800">{av.usuario || "Usuário"}</div>
+                </div>
+                <div className="flex items-center gap-1 text-[#ffe600] text-lg mb-2" aria-label={`${av.nota} estrelas`}>
+                  {Array(av.nota).fill().map((_, i) => <span key={i}>★</span>)}
+                  {av.nota < 5 && Array(5 - av.nota).fill().map((_, i) => <span key={i} className="text-gray-300">★</span>)}
+                </div>
+                <div className="text-gray-700 mb-2 line-clamp-3">{av.comentario}</div>
+                {av.imagem && typeof av.imagem === "string" && (
+                  <img src={av.imagem} alt="Imagem avaliação" className="w-full h-32 object-cover rounded-lg mb-2" />
+                )}
+                <div className="text-sm text-gray-500 mt-auto">Evento: {av.eventoId}</div>
+                <div className="text-xs text-gray-400 mt-1">{av.criadoEm?.toDate ? av.criadoEm.toDate().toLocaleDateString() : ""}</div>
+              </div>
+            ))}
           </div>
         )}
       </main>

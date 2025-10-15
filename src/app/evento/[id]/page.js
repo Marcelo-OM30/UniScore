@@ -1,8 +1,21 @@
 
 "use client";
 import { useState } from "react";
+import { useEffect } from "react";
+import { auth } from "../../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useParams } from "next/navigation";
+import { db } from "../../../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function AvaliarEvento() {
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        const unsub = onAuthStateChanged(auth, (u) => setUser(u));
+        return () => unsub();
+    }, []);
+    const params = useParams();
+    const eventoId = params?.id || "";
     const [nota, setNota] = useState(0);
     const [comentario, setComentario] = useState("");
     const [imagem, setImagem] = useState(null);
@@ -49,11 +62,44 @@ export default function AvaliarEvento() {
         setRespostas(prev => ({ ...prev, [id]: valor }));
     };
 
+    const [enviando, setEnviando] = useState(false);
+    const [sucesso, setSucesso] = useState("");
+    const [erro, setErro] = useState("");
+
+    // Salvar avaliação no Firestore
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setEnviando(true);
+        setSucesso("");
+        setErro("");
+        try {
+            await addDoc(collection(db, "avaliacoes"), {
+                eventoId,
+                nota,
+                respostas,
+                comentario,
+                imagem: imagem ? imagem.name : "", // placeholder
+                criadoEm: serverTimestamp(),
+                usuario: user?.displayName || "Usuário",
+                avatar: user?.photoURL || "",
+            });
+            setSucesso("Avaliação enviada com sucesso!");
+            setNota(0);
+            setComentario("");
+            setImagem(null);
+            setRespostas({});
+        } catch (err) {
+            setErro("Erro ao enviar avaliação. Tente novamente.");
+            console.error("Erro Firestore:", err);
+        }
+        setEnviando(false);
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-bold text-blue-700 mb-4">Avaliar Evento</h2>
-                <form className="flex flex-col gap-4">
+                <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     <div>
                         <label className="block font-semibold mb-2">Nota:</label>
                         <div>{renderStars()}</div>
@@ -101,9 +147,12 @@ export default function AvaliarEvento() {
                     <button
                         type="submit"
                         className="bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700 transition"
+                        disabled={enviando}
                     >
-                        Enviar Avaliação
+                        {enviando ? "Enviando..." : "Enviar Avaliação"}
                     </button>
+                    {sucesso && <div className="text-green-600 text-center mt-2">{sucesso}</div>}
+                    {erro && <div className="text-red-600 text-center mt-2">{erro}</div>}
                 </form>
             </div>
         </div>

@@ -1,0 +1,144 @@
+Especificação de Requisitos de Software — UniScore
+
+Baseada no IEEE Std 830-1998
+
+1. Introdução
+
+1.1 Propósito
+Este documento especifica os requisitos para o sistema UniScore, uma rede social voltada para universitários, familiares, visitantes e convidados avaliarem eventos promovidos por universidades, discutindo seu impacto, acessibilidade, multiculturalidade e outros aspectos relevantes.
+
+1.2 Escopo
+O UniScore permitirá aos usuários:
+- Avaliar eventos universitários de todos os temas e matérias.
+- Debater sobre os eventos, compartilhar opiniões, inserir imagens e notas.
+- Avaliar aspectos como acessibilidade, conforto, multiculturalidade e politização dos eventos.
+- Ganhar estrelas, bônus e selos por participação.
+- Utilizar funcionalidades de rede social (postagens, comentários, uploads de imagens).
+
+A aplicação será desenvolvida em Python (Django REST) ou Next.js/React com Tailwind CSS, autenticação via Firebase Auth, banco de dados (SQL ou NoSQL), e deploy gratuito (ex.: Render).
+
+1.3 Definições, Acrônimos e Abreviações
+- Usuário: universitário, familiar, visitante ou convidado.
+- Evento: atividade promovida pela universidade.
+- Avaliação: nota, comentário ou imagem sobre um evento.
+- SRS: Software Requirements Specification.
+
+1.4 Referências
+- IEEE Std 830-1998 — IEEE Recommended Practice for Software Requirements Specifications
+
+1.5 Visão Geral
+O documento segue a estrutura recomendada pelo IEEE 830, detalhando requisitos funcionais, não funcionais, restrições, interfaces e critérios de aceitação.
+
+---
+
+2. Descrição Geral
+
+2.1 Perspectiva do Produto
+O UniScore será uma aplicação web (SPA) com backend em Django REST ou Node.js, frontend em React/Next.js + Tailwind CSS, autenticação via Firebase Auth, banco de dados (Firestore, Supabase ou PostgreSQL) e deploy em plataforma gratuita.
+
+2.2 Funções do Produto
+- Cadastro e autenticação de usuários.
+- Integração com api do mackenzie para busca dos eventos.
+- Avaliação de eventos (notas, comentários, imagens).
+- Discussão e debate sobre eventos (rede social).
+- Sistema de gamificação (estrelas, bônus, selos).
+- Busca e filtros de eventos.
+- Moderação de conteúdo.
+
+2.3 Características dos Usuários
+- Universitários
+- Familiares
+- Visitantes
+- Convidados
+
+2.4 Restrições
+- Deploy em plataforma gratuita (ex.: Render).
+- Autenticação via Firebase Auth.
+- Interface responsiva e acessível.
+
+2.5 Suposições e Dependências
+- Usuários possuem acesso à internet e dispositivos compatíveis.
+- Integração com APIs externas.
+
+---
+
+3. Requisitos Específicos
+
+3.1 Requisitos Funcionais
+
+RF01 — Cadastro e Autenticação
+- O sistema deve permitir cadastro/autenticação via e-mail, Google ou redes sociais (Firebase Auth).
+- Usuários podem escolher perfil (universitário, familiar, visitante, convidado).
+
+RF02 — Cadastro de Eventos
+- Administradores podem cadastrar eventos com nome, descrição, data, local, público-alvo, preço, tema/matéria.
+
+RF03 — Avaliação de Eventos
+- Usuários podem avaliar eventos com notas (1 a 5), comentários e upload de imagens.
+- Avaliações devem contemplar acessibilidade, conforto, multiculturalidade, politização e impacto.
+
+RF04 — Rede Social
+- Usuários podem debater sobre eventos, comentar, responder e curtir postagens.
+- Upload de imagens nas postagens.
+
+RF05 — Gamificação
+- Usuários ganham estrelas, bônus e selos por participação (ex.: avaliações, comentários, uploads).
+
+RF06 — Busca e Filtros
+- Busca de eventos por nome, tema, data, universidade, tipo, notas, número de avaliações.
+
+RF07 — Moderação
+- Sistema de denúncia de conteúdo ofensivo ou inadequado.
+- Administradores podem revisar e moderar avaliações e postagens.
+
+RF08 — Painel Administrativo
+- Gerenciamento de eventos, usuários, avaliações e estatísticas.
+- Exportação de relatórios (CSV, PDF).
+
+3.2 Requisitos Não Funcionais
+
+RNF01 — Desempenho
+- Suportar pelo menos 10.000 usuários simultâneos.
+
+RNF02 — Segurança
+- Criptografia de senhas e proteção de dados.
+- Moderação de conteúdo e proteção contra spam.
+
+RNF03 — Disponibilidade
+- 99% de uptime mensal.
+
+RNF04 — Usabilidade
+- Interface intuitiva, responsiva e acessível (WCAG).
+
+RNF05 — Compatibilidade
+- Compatível com navegadores modernos e dispositivos móveis.
+
+RNF06 — Escalabilidade
+- Permitir integração futura com APIs externas.
+
+RNF07 — Internacionalização
+- Suporte a múltiplos idiomas (PT-BR, EN-US).
+
+3.3 Requisitos de Interface
+- Interface web SPA (React/Next.js + Tailwind CSS).
+- API RESTful (Django REST ou Node.js/Express).
+- Autenticação via Firebase Auth.
+- Banco de dados Firestore, Supabase ou PostgreSQL.
+
+3.4 Critérios de Aceitação
+- Usuário consegue se cadastrar, autenticar e acessar funcionalidades básicas.
+- Eventos podem ser cadastrados, avaliados e debatidos.
+- Sistema de gamificação funcional.
+- Moderação ativa e exportação de relatórios disponível.
+- Interface responsiva e acessível.
+
+---
+
+4. Apêndices
+- Protótipo visual sugerido: Figma.
+- Deploy: Render (gratuito).
+- Futuras extensões: app mobile, integração com MEC, IA para análise de sentimento.
+
+---
+
+Fim do documento de especificação de requisitos — UniScore

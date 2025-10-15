@@ -75,7 +75,7 @@ export default function Login() {
                     >
                         Entrar com Google
                     </button>
-                    <a href="#" className="text-blue-600 text-sm text-center hover:underline">
+                    <a href="/cadastro" className="text-blue-600 text-sm text-center hover:underline">
                         Não tem conta? Cadastre-se
                     </a>
                 </div>
