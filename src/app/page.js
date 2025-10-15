@@ -1,103 +1,127 @@
-import Image from "next/image";
+
+
+"use client";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [search, setSearch] = useState("");
+  const [events, setEvents] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [searched, setSearched] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    fetch("/events.json")
+      .then((res) => res.json())
+      .then((data) => setEvents(data));
+  }, []);
+
+  useEffect(() => {
+    if (!searched) {
+      setFiltered([]);
+      return;
+    }
+    if (!search) {
+      setFiltered([]);
+    } else {
+      setFiltered(
+        events.filter((ev) =>
+          ev.nome.toLowerCase().includes(search.toLowerCase()) ||
+          ev.universidade.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    }
+  }, [search, events, searched]);
+
+
+  return (
+    <div className="min-h-screen bg-[#fffbe6] font-sans relative overflow-x-hidden">
+      {/* Header - Trustpilot style */}
+      <header className="flex items-center justify-between px-6 py-4 bg-black text-white">
+        <div className="flex items-center gap-4">
+          <img src="/uniscore-logo.png" alt="UniScore Logo" className="h-8 w-auto max-w-[120px]" />
+          <span className="text-xl font-bold tracking-tight">UniScore</span>
         </div>
+        <nav className="hidden md:flex gap-8 text-sm">
+          <a href="#" className="hover:underline">Escreva uma avaliação</a>
+          <a href="#" className="hover:underline">Categorias</a>
+          <a href="#" className="hover:underline">Blog</a>
+        </nav>
+        <div className="flex items-center gap-4">
+          <div className="rounded-full bg-gray-800 w-8 h-8 flex items-center justify-center shadow-sm border border-gray-700 cursor-pointer">👤</div>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full font-semibold text-sm">Para universidades</button>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative flex flex-col items-center justify-center py-20 px-4 text-center">
+        {/* Decorative shapes - more vibrant */}
+        <div className="absolute left-0 top-0 w-1/3 h-48 bg-[#ffe600] rounded-br-full -z-10" style={{ clipPath: 'ellipse(100% 100% at 0% 0%)' }}></div>
+        <div className="absolute right-0 top-0 w-1/2 h-40 bg-[#ff5c00] rounded-bl-full -z-10" style={{ clipPath: 'ellipse(100% 100% at 100% 0%)' }}></div>
+        <div className="absolute right-0 bottom-0 w-1/3 h-32 bg-[#00e676] rounded-tl-full -z-10" style={{ clipPath: 'ellipse(100% 100% at 100% 100%)' }}></div>
+        <div className="absolute left-0 bottom-0 w-1/4 h-24 bg-[#00b0ff] rounded-tr-full -z-10" style={{ clipPath: 'ellipse(100% 100% at 0% 100%)' }}></div>
+
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight drop-shadow-lg">Encontre um evento</h1>
+        <p className="text-lg md:text-xl text-gray-700 mb-8 drop-shadow">Encontre e avalie os eventos</p>
+        <form className="w-full max-w-xl mx-auto flex items-center bg-white rounded-full shadow-2xl px-4 py-2 border-2 border-[#00e676]" onSubmit={e => { e.preventDefault(); setSearched(true); }}>
+          <input
+            className="flex-1 border-none outline-none bg-transparent px-2 py-2 text-gray-700 text-base"
+            placeholder="Buscar evento"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          <button type="submit" className="bg-[#00b0ff] hover:bg-[#0091ea] text-white rounded-full p-2 ml-2 shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+              <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" fill="none" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35" />
+            </svg>
+          </button>
+        </form>
+      </section>
+
+      {/* Event Feed */}
+      <main className="px-4 py-8 max-w-3xl mx-auto">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Eventos encontrados</h2>
+        {!searched ? (
+          <div className="text-center text-gray-400 py-12">
+            <div className="text-xl">Pesquise para encontrar eventos universitários.</div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {filtered.length === 0 ? (
+              <div className="mt-10 text-center text-gray-500">
+                <img src="/search-empty.svg" alt="Nenhum evento encontrado" className="mx-auto mb-4 w-32 h-32 opacity-60" />
+                <div className="text-lg">Nenhum evento encontrado. Tente buscar por outro nome ou universidade.</div>
+              </div>
+            ) : (
+              filtered.map(ev => (
+                <div key={ev.id} className="bg-gradient-to-r from-[#ffe600] via-[#00e676] to-[#00b0ff] rounded-2xl shadow-2xl border border-gray-100 p-1">
+                  <div className="bg-white rounded-2xl p-6 flex flex-col md:flex-row items-center hover:shadow-xl transition group">
+                    <Link href={`/evento/${ev.id}/detalhes`} className="shrink-0">
+                      <img src={ev.imagem} alt={ev.nome} className="w-32 h-32 rounded-xl object-cover border-4 border-[#00b0ff] bg-gray-100 cursor-pointer group-hover:scale-105 transition-transform duration-200" />
+                    </Link>
+                    <div className="flex-1 ml-0 md:ml-6 mt-4 md:mt-0 w-full">
+                      <div className="text-xl font-bold text-gray-800 drop-shadow">{ev.nome}</div>
+                      <div className="flex items-center gap-1 text-[#ffe600] text-lg" aria-label={`${ev.avaliacao} estrelas`}>
+                        {Array(ev.avaliacao).fill().map((_, i) => <span key={i}>★</span>)}
+                        {ev.avaliacao < 5 && Array(5 - ev.avaliacao).fill().map((_, i) => <span key={i} className="text-gray-300">★</span>)}
+                      </div>
+                      <div className="text-sm text-gray-500 mt-1">Data: {new Date(ev.data).toLocaleDateString()}</div>
+                      <div className="text-sm text-gray-400 mt-1">{ev.universidade}</div>
+                      <div className="mt-4 flex gap-2">
+                        <Link href={`/evento/${ev.id}`}>
+                          <button className="bg-[#ff5c00] hover:bg-[#ff9100] text-white px-4 py-2 rounded-lg font-bold shadow transition">Avaliar</button>
+                        </Link>
+                        <button className="bg-[#00e676] hover:bg-[#00c853] text-white px-4 py-2 rounded-lg font-bold shadow transition">Comentários</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
