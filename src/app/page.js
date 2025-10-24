@@ -3,18 +3,63 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { auth, db } from "../firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 
+function EventosDaUniversidade({ uni }) {
+  const [eventos, setEventos] = useState([]);
+  useEffect(() => {
+    fetch("/events.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setEventos(data.filter(ev => uni.eventos.includes(ev.id)));
+      });
+  }, [uni]);
+  if (!eventos.length) {
+    return (<div className="text-gray-400">Nenhum evento cadastrado para esta universidade.</div>);
+  }
+  return (
+    <div className="space-y-6">
+      {eventos.map(ev => (
+        <div key={ev.id} className="bg-gradient-to-r from-[#ffe600] via-[#00e676] to-[#00b0ff] rounded-2xl shadow-2xl border border-gray-100 p-1">
+          <div className="bg-white rounded-2xl p-6 flex flex-col md:flex-row items-center hover:shadow-xl transition group">
+            <Link href={`/evento/${ev.id}/detalhes`} className="shrink-0">
+              <img src={ev.imagem} alt={ev.nome} className="w-32 h-32 rounded-xl object-cover border-4 border-[#00b0ff] bg-gray-100 cursor-pointer group-hover:scale-105 transition-transform duration-200" />
+            </Link>
+            <div className="flex-1 ml-0 md:ml-6 mt-4 md:mt-0 w-full">
+              <div className="text-xl font-bold text-gray-800 drop-shadow">{ev.nome}</div>
+              <div className="flex items-center gap-1 text-[#ffe600] text-lg" aria-label={`${ev.avaliacao} estrelas`}>
+                {Array(ev.avaliacao).fill().map((_, i) => <span key={i}>★</span>)}
+                {ev.avaliacao < 5 && Array(5 - ev.avaliacao).fill().map((_, i) => <span key={i} className="text-gray-300">★</span>)}
+              </div>
+              <div className="text-sm text-gray-500 mt-1">Data: {ev.data}</div>
+              <div className="mt-4 flex gap-2">
+                <Link href={`/evento/${ev.id}`}>
+                  <button className="bg-[#ff5c00] hover:bg-[#ff9100] text-white px-4 py-2 rounded-lg font-bold shadow transition">Avaliar</button>
+                </Link>
+                <button className="bg-[#00e676] hover:bg-[#00c853] text-white px-4 py-2 rounded-lg font-bold shadow transition">Comentários</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [events, setEvents] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [searched, setSearched] = useState(false);
+  const [universidades, setUniversidades] = useState([]);
+    const searchParams = useSearchParams();
+  const sucesso = searchParams.get("sucesso") === "1";
+  const [suggestions, setSuggestions] = useState([]);
+  const [selectedUni, setSelectedUni] = useState(null);
   const [user, setUser] = useState(null);
   const [avaliacoes, setAvaliacoes] = useState([]);
-  // Buscar avaliações recentes do Firestore
+  const router = useRouter();
+
   useEffect(() => {
     const q = query(collection(db, "avaliacoes"), orderBy("criadoEm", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -30,28 +75,23 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetch("/events.json")
+    fetch("/universidades.json")
       .then((res) => res.json())
-      .then((data) => setEvents(data));
+      .then((data) => setUniversidades(data));
   }, []);
 
   useEffect(() => {
-    if (!searched) {
-      setFiltered([]);
+    if (!search) {
+      setSuggestions([]);
       return;
     }
-    if (!search) {
-      setFiltered([]);
-    } else {
-      setFiltered(
-        events.filter((ev) =>
-          ev.nome.toLowerCase().includes(search.toLowerCase()) ||
-          ev.universidade.toLowerCase().includes(search.toLowerCase())
-        )
-      );
-    }
-  }, [search, events, searched]);
-
+    setSuggestions(
+      universidades.filter((uni) =>
+        uni.nome.toLowerCase().includes(search.toLowerCase()) ||
+        uni.sigla.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search, universidades]);
 
   return (
     <div className="min-h-screen bg-[#fffbe6] font-sans relative overflow-x-hidden">
@@ -97,66 +137,52 @@ export default function Home() {
         <div className="absolute right-0 bottom-0 w-1/3 h-32 bg-[#00e676] rounded-tl-full -z-10" style={{ clipPath: 'ellipse(100% 100% at 100% 100%)' }}></div>
         <div className="absolute left-0 bottom-0 w-1/4 h-24 bg-[#00b0ff] rounded-tr-full -z-10" style={{ clipPath: 'ellipse(100% 100% at 0% 100%)' }}></div>
 
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight drop-shadow-lg">Encontre um evento</h1>
-        <p className="text-lg md:text-xl text-gray-700 mb-8 drop-shadow">Encontre e avalie os eventos</p>
-        <form className="w-full max-w-xl mx-auto flex items-center bg-white rounded-full shadow-2xl px-4 py-2 border-2 border-[#00e676]" onSubmit={e => { e.preventDefault(); setSearched(true); }}>
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight drop-shadow-lg">Encontre uma universidade</h1>
+        <p className="text-lg md:text-xl text-gray-700 mb-8 drop-shadow">Encontre eventos da sua universidade e avalie seu impacto</p>
+        <div className="w-full max-w-xl mx-auto relative">
           <input
-            className="flex-1 border-none outline-none bg-transparent px-2 py-2 text-gray-700 text-base"
-            placeholder="Buscar evento"
+            className="w-full border-none outline-none bg-white rounded-full shadow-2xl px-4 py-2 border-2 border-[#00e676] text-gray-700 text-base"
+            placeholder="Buscar universidade"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
-          <button type="submit" className="bg-[#00b0ff] hover:bg-[#0091ea] text-white rounded-full p-2 ml-2 shadow-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-              <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" fill="none" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35" />
-            </svg>
-          </button>
-        </form>
+          {search && suggestions.length > 0 && (
+            <ul className="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-10">
+              {suggestions.map(uni => (
+                <li
+                  key={uni.id}
+                  className="px-4 py-2 cursor-pointer hover:bg-[#e3fcec]"
+                  onClick={() => {
+                    window.location.href = `/universidade/${uni.id}`;
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <img src={uni.imagem} alt={uni.nome} className="w-8 h-8 rounded-full object-cover border border-gray-300" />
+                    <span className="font-semibold">{uni.nome}</span>
+                    <span className="text-xs text-gray-400 ml-2">{uni.sigla}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </section>
 
       <main className="px-4 py-8 max-w-5xl mx-auto">
-        {/* Event Feed */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Eventos encontrados</h2>
-        {!searched ? (
-          <div className="text-center text-gray-400 py-12">
-            <div className="text-xl">Pesquise para encontrar eventos universitários.</div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {filtered.length === 0 ? (
-              <div className="mt-10 text-center text-gray-500">
-                <img src="/search-empty.svg" alt="Nenhum evento encontrado" className="mx-auto mb-4 w-32 h-32 opacity-60" />
-                <div className="text-lg">Nenhum evento encontrado. Tente buscar por outro nome ou universidade.</div>
+        {/* Universidade selecionada */}
+        {selectedUni ? (
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-8 mb-8">
+            <div className="flex items-center gap-6 mb-4">
+              <img src={selectedUni.imagem} alt={selectedUni.nome} className="w-20 h-20 rounded-full object-cover border-4 border-[#00b0ff]" />
+              <div>
+                <div className="text-2xl font-bold text-gray-800">{selectedUni.nome} <span className="text-xs text-gray-400 ml-2">{selectedUni.sigla}</span></div>
+                <div className="text-gray-600 mt-2">{selectedUni.descricao}</div>
               </div>
-            ) : (
-              filtered.map(ev => (
-                <div key={ev.id} className="bg-gradient-to-r from-[#ffe600] via-[#00e676] to-[#00b0ff] rounded-2xl shadow-2xl border border-gray-100 p-1">
-                  <div className="bg-white rounded-2xl p-6 flex flex-col md:flex-row items-center hover:shadow-xl transition group">
-                    <Link href={`/evento/${ev.id}/detalhes`} className="shrink-0">
-                      <img src={ev.imagem} alt={ev.nome} className="w-32 h-32 rounded-xl object-cover border-4 border-[#00b0ff] bg-gray-100 cursor-pointer group-hover:scale-105 transition-transform duration-200" />
-                    </Link>
-                    <div className="flex-1 ml-0 md:ml-6 mt-4 md:mt-0 w-full">
-                      <div className="text-xl font-bold text-gray-800 drop-shadow">{ev.nome}</div>
-                      <div className="flex items-center gap-1 text-[#ffe600] text-lg" aria-label={`${ev.avaliacao} estrelas`}>
-                        {Array(ev.avaliacao).fill().map((_, i) => <span key={i}>★</span>)}
-                        {ev.avaliacao < 5 && Array(5 - ev.avaliacao).fill().map((_, i) => <span key={i} className="text-gray-300">★</span>)}
-                      </div>
-                      <div className="text-sm text-gray-500 mt-1">Data: {ev.data}</div>
-                      <div className="text-sm text-gray-400 mt-1">{ev.universidade}</div>
-                      <div className="mt-4 flex gap-2">
-                        <Link href={`/evento/${ev.id}`}>
-                          <button className="bg-[#ff5c00] hover:bg-[#ff9100] text-white px-4 py-2 rounded-lg font-bold shadow transition">Avaliar</button>
-                        </Link>
-                        <button className="bg-[#00e676] hover:bg-[#00c853] text-white px-4 py-2 rounded-lg font-bold shadow transition">Comentários</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mt-6 mb-4">Eventos da universidade</h3>
+            <EventosDaUniversidade uni={selectedUni} />
           </div>
-        )}
+        ) : null}
 
         {/* Avaliações Recentes - Trustpilot style */}
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center mt-12">Avaliações recentes</h2>
@@ -166,16 +192,16 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {avaliacoes.map(av => (
               <div key={av.id} className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col">
-                <div className="flex items-center gap-3 mb-2">
-                  {av.avatar ? (
-                    <img src={av.avatar} alt="Avatar" className="rounded-full w-10 h-10 object-cover border border-gray-300" />
-                  ) : (
-                    <div className="rounded-full bg-gray-200 w-10 h-10 flex items-center justify-center text-xl font-bold text-gray-600">
-                      {av.usuario?.charAt(0)?.toUpperCase() || "U"}
-                    </div>
-                  )}
-                  <div className="font-semibold text-gray-800">{av.usuario || "Usuário"}</div>
-                </div>
+                 <div className="flex items-center gap-3 mb-2">
+                   {av.photoURL ? (
+                     <img src={av.photoURL} alt="Avatar" className="rounded-full w-10 h-10 object-cover border border-gray-300" />
+                   ) : (
+                     <div className="rounded-full bg-gray-200 w-10 h-10 flex items-center justify-center text-xl font-bold text-gray-600">
+                       {av.usuario?.charAt(0)?.toUpperCase() || "U"}
+                     </div>
+                   )}
+                   <div className="font-semibold text-gray-800">{av.usuario || "Usuário"}</div>
+                 </div>
                 <div className="flex items-center gap-1 text-[#ffe600] text-lg mb-2" aria-label={`${av.nota} estrelas`}>
                   {Array(av.nota).fill().map((_, i) => <span key={i}>★</span>)}
                   {av.nota < 5 && Array(5 - av.nota).fill().map((_, i) => <span key={i} className="text-gray-300">★</span>)}
@@ -188,6 +214,11 @@ export default function Home() {
                 <div className="text-xs text-gray-400 mt-1">{av.criadoEm?.toDate ? av.criadoEm.toDate().toLocaleDateString() : ""}</div>
               </div>
             ))}
+          </div>
+        )}
+        {sucesso && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative max-w-lg mx-auto mt-6 mb-2 text-center">
+            Avaliação enviada com sucesso!
           </div>
         )}
       </main>

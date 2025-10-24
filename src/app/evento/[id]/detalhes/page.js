@@ -1,4 +1,6 @@
 "use client";
+import { useRouter, useParams } from "next/navigation";
+
 export default function DetalhesEvento() {
     // Exemplo de dados estáticos
     const evento = {
@@ -16,6 +18,10 @@ export default function DetalhesEvento() {
             { usuario: "Maria", texto: "Achei o ambiente confortável." },
         ],
     };
+
+    const router = useRouter();
+    const params = useParams();
+    const eventoId = params?.id || "1";
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -46,7 +52,12 @@ export default function DetalhesEvento() {
                     </ul>
                 </div>
                 <div className="mt-6 flex gap-2">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded">Avaliar</button>
+                    <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                        onClick={() => router.push(`/evento/${eventoId}/avaliar`)}
+                    >
+                        Avaliar
+                    </button>
                 </div>
             </div>
         </div>
