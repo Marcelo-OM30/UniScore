@@ -52,7 +52,7 @@ function EventosDaUniversidade({ uni }) {
 export default function Home() {
   const [search, setSearch] = useState("");
   const [universidades, setUniversidades] = useState([]);
-    const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const sucesso = searchParams.get("sucesso") === "1";
   const [suggestions, setSuggestions] = useState([]);
   const [selectedUni, setSelectedUni] = useState(null);
@@ -184,6 +184,23 @@ export default function Home() {
           </div>
         ) : null}
 
+        {/* Bloco explicativo estilo Trustpilot */}
+        <section className="max-w-5xl mx-auto mb-8 rounded-3xl bg-[#c6ffe0] flex flex-col md:flex-row gap-6 p-8 shadow-lg">
+          <div className="flex-1 flex flex-col justify-center">
+            <h2 className="text-3xl font-bold mb-2 text-gray-900">Somos a UniScore</h2>
+            <p className="text-lg text-gray-800 mb-4">A UniScore é uma plataforma aberta para avaliação de eventos universitários. Nosso objetivo é promover transparência, confiança e engajamento entre estudantes, familiares e visitantes, permitindo que todos compartilhem opiniões, notas e experiências sobre eventos promovidos por universidades.</p>
+            <p className="text-md text-gray-700 mb-6">Aqui você pode avaliar eventos, debater, ganhar selos e estrelas por participação, e ajudar universidades a aprimorar seus serviços. Junte-se à nossa comunidade e faça parte da transformação universitária!</p>
+            <Link href="/o-que-fazemos" className="inline-block bg-black text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-900 transition">O que fazemos</Link>
+          </div>
+          <div className="flex-1 flex flex-col justify-center items-center">
+            <div className="bg-[#1de9b6] rounded-2xl p-6 w-full flex flex-col items-center shadow-md">
+              <h3 className="text-xl font-bold text-white mb-2">Nosso objetivo</h3>
+              <p className="text-white text-center mb-4">Capacitar pessoas a avaliar, debater e melhorar eventos universitários, promovendo confiança e transparência entre todos os participantes.</p>
+              <Link href="/relatorio" className="bg-white text-[#1de9b6] px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-100 transition">Ver relatório de impacto</Link>
+            </div>
+          </div>
+        </section>
+
         {/* Avaliações Recentes - Trustpilot style */}
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center mt-12">Avaliações recentes</h2>
         {avaliacoes.length === 0 ? (
@@ -192,16 +209,16 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {avaliacoes.map(av => (
               <div key={av.id} className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col">
-                 <div className="flex items-center gap-3 mb-2">
-                   {av.photoURL ? (
-                     <img src={av.photoURL} alt="Avatar" className="rounded-full w-10 h-10 object-cover border border-gray-300" />
-                   ) : (
-                     <div className="rounded-full bg-gray-200 w-10 h-10 flex items-center justify-center text-xl font-bold text-gray-600">
-                       {av.usuario?.charAt(0)?.toUpperCase() || "U"}
-                     </div>
-                   )}
-                   <div className="font-semibold text-gray-800">{av.usuario || "Usuário"}</div>
-                 </div>
+                <div className="flex items-center gap-3 mb-2">
+                  {av.photoURL ? (
+                    <img src={av.photoURL} alt="Avatar" className="rounded-full w-10 h-10 object-cover border border-gray-300" />
+                  ) : (
+                    <div className="rounded-full bg-gray-200 w-10 h-10 flex items-center justify-center text-xl font-bold text-gray-600">
+                      {av.usuario?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
+                  )}
+                  <div className="font-semibold text-gray-800">{av.usuario || "Usuário"}</div>
+                </div>
                 <div className="flex items-center gap-1 text-[#ffe600] text-lg mb-2" aria-label={`${av.nota} estrelas`}>
                   {Array(av.nota).fill().map((_, i) => <span key={i}>★</span>)}
                   {av.nota < 5 && Array(5 - av.nota).fill().map((_, i) => <span key={i} className="text-gray-300">★</span>)}
