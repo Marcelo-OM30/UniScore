@@ -23,23 +23,23 @@ function EventosDaUniversidade({ uni }) {
   return (
     <div className="space-y-6">
       {eventos.map(ev => (
-        <div key={ev.id} className="bg-gradient-to-r from-[#ffe600] via-[#00e676] to-[#00b0ff] rounded-2xl shadow-2xl border border-gray-100 p-1">
-          <div className="bg-white rounded-2xl p-6 flex flex-col md:flex-row items-center hover:shadow-xl transition group">
+        <div key={ev.id} className="bg-gradient-to-r from-[#ffe600] via-[#00e676] to-[#00b0ff] rounded-2xl shadow-2xl border border-[#c41230] p-1">
+          <div className="bg-white rounded-2xl p-6 flex flex-col md:flex-row items-center hover:shadow-xl transition group border border-[#c41230]">
             <Link href={`/evento/${ev.id}/detalhes`} className="shrink-0">
-              <img src={ev.imagem} alt={ev.nome} className="w-32 h-32 rounded-xl object-cover border-4 border-[#00b0ff] bg-gray-100 cursor-pointer group-hover:scale-105 transition-transform duration-200" />
+              <img src={ev.imagem} alt={ev.nome} className="w-32 h-32 rounded-xl object-cover border-4 border-[#c41230] bg-gray-100 cursor-pointer group-hover:scale-105 transition-transform duration-200" />
             </Link>
             <div className="flex-1 ml-0 md:ml-6 mt-4 md:mt-0 w-full">
-              <div className="text-xl font-bold text-gray-800 drop-shadow">{ev.nome}</div>
+              <div className="text-xl font-bold text-[#c41230] drop-shadow">{ev.nome}</div>
               <div className="flex items-center gap-1 text-[#ffe600] text-lg" aria-label={`${ev.avaliacao} estrelas`}>
                 {Array(ev.avaliacao).fill().map((_, i) => <span key={i}>★</span>)}
-                {ev.avaliacao < 5 && Array(5 - ev.avaliacao).fill().map((_, i) => <span key={i} className="text-gray-300">★</span>)}
+                {ev.avaliacao < 5 && Array(5 - ev.avaliacao).fill().map((_, i) => <span key={i} className="text-[#c41230]">★</span>)}
               </div>
-              <div className="text-sm text-gray-500 mt-1">Data: {ev.data}</div>
+              <div className="text-sm text-[#c41230] mt-1">Data: {ev.data}</div>
               <div className="mt-4 flex gap-2">
                 <Link href={`/evento/${ev.id}`}>
-                  <button className="bg-[#ff5c00] hover:bg-[#ff9100] text-white px-4 py-2 rounded-lg font-bold shadow transition">Avaliar</button>
+                  <button className="bg-[#c41230] hover:bg-[#a60f23] text-white px-4 py-2 rounded-lg font-bold shadow transition">Avaliar</button>
                 </Link>
-                <button className="bg-[#00e676] hover:bg-[#00c853] text-white px-4 py-2 rounded-lg font-bold shadow transition">Comentários</button>
+                <button className="bg-[#ffe600] hover:bg-[#c41230] text-[#222] px-4 py-2 rounded-lg font-bold shadow transition">Comentários</button>
               </div>
             </div>
           </div>
@@ -94,9 +94,9 @@ export default function Home() {
   }, [search, universidades]);
 
   return (
-    <div className="min-h-screen bg-[#fffbe6] font-sans relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#f4f4f4] font-sans relative overflow-x-hidden">
       {/* Header - Trustpilot style */}
-      <header className="flex items-center justify-between px-6 py-4 bg-black text-white">
+      <header className="flex items-center justify-between px-6 py-4 bg-[#c41230] text-white">
         <div className="flex items-center gap-4">
           <img src="/uniscore-logo.png" alt="UniScore Logo" className="h-8 w-auto max-w-[120px]" />
           <span className="text-xl font-bold tracking-tight">UniScore</span>
@@ -114,10 +114,10 @@ export default function Home() {
               <span role="img" aria-label="Perfil">👤</span>
             )}
           </a>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full font-semibold text-sm">Para universidades</button>
+          <button className="bg-[#0056b3] hover:bg-[#003366] text-white px-4 py-1 rounded-full font-semibold text-sm">Para universidades</button>
           {user && (
             <button
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-full font-semibold text-sm ml-2"
+              className="bg-[#c41230] hover:bg-[#a60f23] text-white px-4 py-1 rounded-full font-semibold text-sm ml-2"
               onClick={async () => {
                 await signOut(auth);
                 window.location.href = "/login";
@@ -185,18 +185,18 @@ export default function Home() {
         ) : null}
 
         {/* Bloco explicativo estilo Trustpilot */}
-        <section className="max-w-5xl mx-auto mb-8 rounded-3xl bg-[#c6ffe0] flex flex-col md:flex-row gap-6 p-8 shadow-lg">
+        <section className="max-w-5xl mx-auto mb-8 rounded-3xl bg-[#0056b3] flex flex-col md:flex-row gap-6 p-8 shadow-lg border-2 border-[#c41230]">
           <div className="flex-1 flex flex-col justify-center">
-            <h2 className="text-3xl font-bold mb-2 text-gray-900">Somos a UniScore</h2>
-            <p className="text-lg text-gray-800 mb-4">A UniScore é uma plataforma aberta para avaliação de eventos universitários. Nosso objetivo é promover transparência, confiança e engajamento entre estudantes, familiares e visitantes, permitindo que todos compartilhem opiniões, notas e experiências sobre eventos promovidos por universidades.</p>
-            <p className="text-md text-gray-700 mb-6">Aqui você pode avaliar eventos, debater, ganhar selos e estrelas por participação, e ajudar universidades a aprimorar seus serviços. Junte-se à nossa comunidade e faça parte da transformação universitária!</p>
-            <Link href="/o-que-fazemos" className="inline-block bg-black text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-gray-900 transition">O que fazemos</Link>
+            <h2 className="text-3xl font-bold mb-2 text-white">Somos a UniScore</h2>
+            <p className="text-lg text-white mb-4">A UniScore é uma plataforma aberta para avaliação de eventos universitários. Nosso objetivo é promover transparência, confiança e engajamento entre estudantes, familiares e visitantes, permitindo que todos compartilhem opiniões, notas e experiências sobre eventos promovidos por universidades.</p>
+            <p className="text-md text-white mb-6">Aqui você pode avaliar eventos, debater, ganhar selos e estrelas por participação, e ajudar universidades a aprimorar seus serviços. Junte-se à nossa comunidade e faça parte da transformação universitária!</p>
+            <Link href="/o-que-fazemos" className="inline-block bg-white text-[#0056b3] px-6 py-2 rounded-full font-semibold shadow hover:bg-[#c41230] transition">O que fazemos</Link>
           </div>
           <div className="flex-1 flex flex-col justify-center items-center">
-            <div className="bg-[#1de9b6] rounded-2xl p-6 w-full flex flex-col items-center shadow-md">
+            <div className="bg-[#0056b3] rounded-2xl p-6 w-full flex flex-col items-center shadow-md">
               <h3 className="text-xl font-bold text-white mb-2">Nosso objetivo</h3>
               <p className="text-white text-center mb-4">Capacitar pessoas a avaliar, debater e melhorar eventos universitários, promovendo confiança e transparência entre todos os participantes.</p>
-              <Link href="/relatorio" className="bg-white text-[#1de9b6] px-5 py-2 rounded-full font-semibold shadow hover:bg-gray-100 transition">Ver relatório de impacto</Link>
+              <Link href="/relatorio" className="bg-white text-[#0056b3] px-5 py-2 rounded-full font-semibold shadow hover:bg-[#c41230] transition">Ver relatório de impacto</Link>
             </div>
           </div>
         </section>

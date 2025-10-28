@@ -42,13 +42,13 @@ export default function Cadastro() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-mackenzie-light">
             <form className="bg-white p-8 rounded shadow-md w-full max-w-md flex flex-col gap-4" onSubmit={handleSubmit}>
-                <h2 className="text-2xl font-bold text-blue-700 mb-4 text-center">Cadastro</h2>
+                <h2 className="text-2xl font-bold text-mackenzie-red mb-4 text-center">Cadastro</h2>
                 <div className="flex justify-center gap-4 mb-2">
                     <button
                         type="button"
-                        className={`border-2 rounded-full p-1 ${avatar === "/avatar-default.png" ? "border-blue-500" : "border-gray-200"}`}
+                        className={`border-2 rounded-full p-1 ${avatar === "/avatar-default.png" ? "border-mackenzie-red" : "border-gray-200"}`}
                         onClick={() => setAvatar("/avatar-default.png")}
                         title="Avatar masculino"
                     >
@@ -56,7 +56,7 @@ export default function Cadastro() {
                     </button>
                     <button
                         type="button"
-                        className={`border-2 rounded-full p-1 ${avatar === "/avatar-feminino-default.jpg" ? "border-blue-500" : "border-gray-200"}`}
+                        className={`border-2 rounded-full p-1 ${avatar === "/avatar-feminino-default.jpg" ? "border-mackenzie-red" : "border-gray-200"}`}
                         onClick={() => setAvatar("/avatar-feminino-default.jpg")}
                         title="Avatar feminino"
                     >

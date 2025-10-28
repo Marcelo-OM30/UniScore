@@ -36,17 +36,17 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-mackenzie-light">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
                 <div className="flex flex-col items-center mb-6">
                     <img src="/uniscore-logo.png" alt="UniScore Logo" className="h-16 mb-2" />
-                    <h2 className="text-2xl font-bold text-blue-700">Entrar no UniScore</h2>
+                    <h2 className="text-2xl font-bold text-mackenzie-red">Entrar no UniScore</h2>
                 </div>
                 <form className="flex flex-col gap-4" onSubmit={handleLogin}>
                     <input
                         type="email"
                         placeholder="E-mail"
-                        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-mackenzie-red"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         required
@@ -54,7 +54,7 @@ export default function Login() {
                     <input
                         type="password"
                         placeholder="Senha"
-                        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-mackenzie-red"
                         value={senha}
                         onChange={e => setSenha(e.target.value)}
                         required

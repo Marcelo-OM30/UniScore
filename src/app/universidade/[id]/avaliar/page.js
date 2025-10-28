@@ -50,6 +50,7 @@ export default function AvaliarUniversidade() {
         }
     }
     // Renderização condicional
+
     let content;
     if (user === undefined) {
         content = <div className="text-center py-8 text-gray-500">Carregando...</div>;
@@ -63,6 +64,7 @@ export default function AvaliarUniversidade() {
             </div>
         );
     } else {
+
         content = (
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>

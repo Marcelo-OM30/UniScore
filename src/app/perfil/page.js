@@ -71,7 +71,7 @@ export default function Perfil() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex items-center justify-center bg-mackenzie-light">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
                 <div className="flex flex-col items-center mb-6">
                     <div className="flex justify-center gap-4 mb-2">
