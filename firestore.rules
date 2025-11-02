@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regras para usuários comuns (estudantes)
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Regras para avaliações - todos podem ler, apenas autenticados podem escrever
+    match /avaliacoes/{avaliacaoId} {
+      allow read: if true; // Público para leitura
+      allow create: if request.auth != null; // Apenas usuários logados podem criar
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.usuarioId || isUniversity(request.auth.uid));
+    }
+    
+    // Regras para universidades - apenas a própria universidade pode acessar seus dados
+    match /universidades/{universidadeId} {
+      allow read, write: if request.auth != null && request.auth.uid == universidadeId;
+      allow create: if request.auth != null; // Permitir cadastro de novas universidades
+    }
+    
+    // Regras para eventos - universidades podem gerenciar, todos podem ler
+    match /eventos/{eventoId} {
+      allow read: if true; // Público para leitura
+      allow create, update, delete: if request.auth != null && isUniversity(request.auth.uid);
+    }
+    
+    // Regras para posts do fórum - todos podem ler, apenas autenticados podem escrever
+    match /forumPosts/{postId} {
+      allow read: if true; // Público para leitura
+      allow create: if request.auth != null; // Apenas usuários logados podem criar
+      allow update: if request.auth != null && 
+        (request.auth.uid == resource.data.autor.uid || isModerator(request.auth.token.email));
+      allow delete: if request.auth != null && 
+        (request.auth.uid == resource.data.autor.uid || isModerator(request.auth.token.email));
+    }
+    
+    // Função auxiliar para verificar se o usuário é uma universidade
+    function isUniversity(uid) {
+      return exists(/databases/$(database)/documents/universidades/$(uid));
+    }
+    
+    // Função auxiliar para verificar se é email institucional
+    function isInstitutionalEmail(email) {
+      return email.matches('.*@.*\\.edu.*') ||
+             email.matches('.*@.*universidade.*') ||
+             email.matches('.*@.*faculdade.*') ||
+             email.matches('.*@.*instituto.*') ||
+             email.matches('.*@uni.*') ||
+             email.matches('.*@.*\\.ac\\..*');
+    }
+    
+    // Função auxiliar para verificar se é moderador
+    function isModerator(email) {
+      return email == 'admin@uniscore.com' ||
+             email == 'moderador@uniscore.com';
+    }
+  }
+}
