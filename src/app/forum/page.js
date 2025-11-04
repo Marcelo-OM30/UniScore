@@ -108,9 +108,9 @@ export default function Forum() {
     };
 
     const PostCard = ({ post }) => (
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300">
+        <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-200 hover:shadow-lg transition-all duration-300">
             <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                     {post.autor.foto ? (
                         <img src={post.autor.foto} alt={post.autor.nome} className="w-full h-full rounded-full object-cover" />
                     ) : (
@@ -120,18 +120,18 @@ export default function Forum() {
 
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                        <span className="font-bold text-white truncate">{post.autor.nome}</span>
-                        <span className="text-white/60 text-sm">@{post.autor.email?.split('@')[0]}</span>
-                        <span className="text-white/60 text-sm">·</span>
-                        <span className="text-white/60 text-sm">{formatTimestamp(post.criadoEm)}</span>
+                        <span className="font-bold text-gray-900 truncate">{post.autor.nome}</span>
+                        <span className="text-gray-500 text-sm">@{post.autor.email?.split('@')[0]}</span>
+                        <span className="text-gray-400 text-sm">·</span>
+                        <span className="text-gray-500 text-sm">{formatTimestamp(post.criadoEm)}</span>
                     </div>
 
-                    <p className="text-white/90 text-lg leading-relaxed mb-4 whitespace-pre-wrap">
+                    <p className="text-gray-700 text-base leading-relaxed mb-4 whitespace-pre-wrap">
                         {post.conteudo}
                     </p>
 
                     {post.mediaUrl && (
-                        <div className="mb-4 rounded-xl overflow-hidden">
+                        <div className="mb-4 rounded-xl overflow-hidden border border-gray-200">
                             {post.mediaType === "image" ? (
                                 <img
                                     src={post.mediaUrl}
@@ -148,12 +148,12 @@ export default function Forum() {
                         </div>
                     )}
 
-                    <div className="flex items-center gap-6 pt-3 border-t border-white/10">
+                    <div className="flex items-center gap-6 pt-3 border-t border-gray-200">
                         <button
                             onClick={() => handleLike(post.id, post.curtidas || [])}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all duration-200 hover:bg-red-500/20 ${user && post.curtidas?.includes(user.uid)
-                                    ? 'text-red-400'
-                                    : 'text-white/70 hover:text-red-400'
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${user && post.curtidas?.includes(user.uid)
+                                    ? 'text-red-500 bg-red-50'
+                                    : 'text-gray-600 hover:text-red-500 hover:bg-red-50'
                                 }`}
                         >
                             <svg className="w-5 h-5" fill={user && post.curtidas?.includes(user.uid) ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
@@ -162,14 +162,14 @@ export default function Forum() {
                             <span className="text-sm font-medium">{post.curtidas?.length || 0}</span>
                         </button>
 
-                        <button className="flex items-center gap-2 px-3 py-2 rounded-full text-white/70 hover:text-blue-400 hover:bg-blue-500/20 transition-all duration-200">
+                        <button className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
                             <span className="text-sm font-medium">{post.comentarios?.length || 0}</span>
                         </button>
 
-                        <button className="flex items-center gap-2 px-3 py-2 rounded-full text-white/70 hover:text-green-400 hover:bg-green-500/20 transition-all duration-200">
+                        <button className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:text-green-600 hover:bg-green-50 transition-all duration-200">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                             </svg>
@@ -181,10 +181,10 @@ export default function Forum() {
     );
 
     const CreatePostForm = () => (
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 mb-6">
+        <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-200">
             <form onSubmit={handleSubmitPost}>
                 <div className="flex gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                         {user?.photoURL ? (
                             <img src={user.photoURL} alt={user.displayName} className="w-full h-full rounded-full object-cover" />
                         ) : (
@@ -197,7 +197,7 @@ export default function Forum() {
                             value={newPost}
                             onChange={(e) => setNewPost(e.target.value)}
                             placeholder="O que você está pensando sobre os eventos universitários?"
-                            className="w-full bg-transparent border-none outline-none text-white text-xl placeholder-white/60 resize-none min-h-[120px] p-0"
+                            className="w-full bg-transparent border-none outline-none text-gray-900 text-lg placeholder-gray-500 resize-none min-h-[120px] p-0"
                             maxLength={280}
                         />
 
@@ -208,19 +208,19 @@ export default function Forum() {
                                     value={mediaUrl}
                                     onChange={(e) => setMediaUrl(e.target.value)}
                                     placeholder={mediaType === "image" ? "URL da imagem" : "URL do vídeo"}
-                                    className="w-full bg-white/20 border border-white/30 rounded-xl p-3 text-white placeholder-white/60 focus:border-white/50 focus:ring-2 focus:ring-white/20"
+                                    className="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                                 />
                             </div>
                         )}
 
-                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/20">
+                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
                             <div className="flex items-center gap-2">
                                 <button
                                     type="button"
                                     onClick={() => setMediaType(mediaType === "image" ? "none" : "image")}
-                                    className={`p-2 rounded-full transition-all duration-200 ${mediaType === "image"
-                                            ? 'bg-blue-500/20 text-blue-400'
-                                            : 'text-white/70 hover:text-blue-400 hover:bg-blue-500/20'
+                                    className={`p-2 rounded-lg transition-all duration-200 ${mediaType === "image"
+                                            ? 'bg-blue-100 text-blue-600'
+                                            : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
                                         }`}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -231,9 +231,9 @@ export default function Forum() {
                                 <button
                                     type="button"
                                     onClick={() => setMediaType(mediaType === "video" ? "none" : "video")}
-                                    className={`p-2 rounded-full transition-all duration-200 ${mediaType === "video"
-                                            ? 'bg-purple-500/20 text-purple-400'
-                                            : 'text-white/70 hover:text-purple-400 hover:bg-purple-500/20'
+                                    className={`p-2 rounded-lg transition-all duration-200 ${mediaType === "video"
+                                            ? 'bg-green-100 text-green-600'
+                                            : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
                                         }`}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,7 +241,7 @@ export default function Forum() {
                                     </svg>
                                 </button>
 
-                                <span className="text-white/50 text-sm ml-4">
+                                <span className="text-gray-500 text-sm ml-4">
                                     {newPost.length}/280
                                 </span>
                             </div>
@@ -249,7 +249,7 @@ export default function Forum() {
                             <button
                                 type="submit"
                                 disabled={!newPost.trim() || loading || newPost.length > 280}
-                                className="bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white px-6 py-2 rounded-full font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:from-[#5a6fd8] hover:to-[#6a4190] transition-all duration-300"
+                                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg"
                             >
                                 {loading ? "Publicando..." : "Publicar"}
                             </button>
@@ -261,24 +261,19 @@ export default function Forum() {
     );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#667eea] via-[#764ba2] to-[#f093fb] relative overflow-hidden">
-            {/* Elementos decorativos */}
-            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute top-20 right-20 w-24 h-24 bg-[#ff6b6b]/20 rounded-full blur-lg animate-bounce"></div>
-            <div className="absolute bottom-20 left-20 w-40 h-40 bg-[#4ecdc4]/15 rounded-full blur-2xl animate-pulse"></div>
-
+        <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <header className="sticky top-0 z-50 bg-black/20 backdrop-blur-sm border-b border-white/10">
+            <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
                 <div className="max-w-4xl mx-auto flex items-center justify-between px-6 py-4">
-                    <Link href="/" className="flex items-center gap-4 text-white hover:text-white/80 transition-colors">
+                    <Link href="/" className="flex items-center gap-3 text-gray-900 hover:text-gray-600 transition-colors">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
                         <span className="font-bold text-lg">Voltar</span>
                     </Link>
 
-                    <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                        <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
                         </svg>
                         Fórum Universitário
@@ -292,19 +287,23 @@ export default function Forum() {
             <main className="max-w-4xl mx-auto px-6 py-8">
                 {user === undefined ? (
                     <div className="text-center py-12">
-                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-                        <div className="text-white/90 text-lg">Carregando...</div>
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                        <div className="text-gray-600 text-lg">Carregando...</div>
                     </div>
                 ) : !user ? (
                     <div className="text-center py-12">
-                        <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-xl max-w-md mx-auto">
-                            <div className="text-6xl mb-6">💬</div>
-                            <h3 className="text-2xl font-bold text-white mb-4">Entre na conversa</h3>
-                            <p className="text-white/90 mb-8 text-lg leading-relaxed">
+                        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 max-w-md mx-auto">
+                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4">Entre na conversa</h3>
+                            <p className="text-gray-600 mb-8 text-base leading-relaxed">
                                 Faça login para participar das discussões sobre eventos universitários e conectar-se com outros estudantes.
                             </p>
                             <Link href="/login">
-                                <button className="bg-white text-[#667eea] px-8 py-3 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg">
+                                <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-lg font-bold text-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-md hover:shadow-lg">
                                     Fazer login
                                 </button>
                             </Link>
@@ -313,12 +312,10 @@ export default function Forum() {
                 ) : (
                     <div className="space-y-6">
                         <div className="text-center mb-8">
-                            <h2 className="text-4xl font-extrabold text-white mb-4">
-                                <span className="bg-gradient-to-r from-[#ffe066] to-[#ff6b6b] bg-clip-text text-transparent">
-                                    Conecte-se com estudantes
-                                </span>
+                            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                                Conecte-se com <span className="text-green-600">estudantes</span>
                             </h2>
-                            <p className="text-xl text-white/90">
+                            <p className="text-xl text-gray-600">
                                 Compartilhe experiências, fotos e vídeos de eventos universitários
                             </p>
                         </div>
@@ -331,10 +328,15 @@ export default function Forum() {
                             ))}
 
                             {posts.length === 0 && (
-                                <div className="text-center py-12">
-                                    <div className="text-white/60 text-lg">
-                                        Nenhuma discussão ainda. Seja o primeiro a compartilhar!
+                                <div className="text-center py-12 bg-white rounded-2xl shadow-md border border-gray-200">
+                                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                        </svg>
                                     </div>
+                                    <p className="text-gray-600 text-lg">
+                                        Nenhuma discussão ainda. Seja o primeiro a compartilhar!
+                                    </p>
                                 </div>
                             )}
                         </div>

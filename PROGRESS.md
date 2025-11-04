@@ -261,6 +261,7 @@
 ## 🔜 **Próxima Sessão de Trabalho**
 
 ### 📱 **Prioridade: Responsividade Mobile**
+
 - [ ] Verificar e ajustar responsividade da página inicial
 - [ ] Testar navegação em telas pequenas
 - [ ] Ajustar banners e cards para mobile
@@ -273,6 +274,7 @@
 - [ ] Garantir botões e links clicáveis em touch screens
 
 ### 🎯 **Objetivos**
+
 - Garantir experiência perfeita em smartphones (320px - 768px)
 - Testar em diferentes resoluções mobile
 - Ajustar breakpoints quando necessário

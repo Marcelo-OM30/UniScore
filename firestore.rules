@@ -1,8 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Regras para usuários comuns (estudantes)
+    // Regras para usuários comuns (estudantes) - ambas nomenclaturas
     match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    match /usuarios/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
     

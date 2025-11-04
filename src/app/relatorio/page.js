@@ -10,7 +10,6 @@ export default function RelatorioPublico() {
         eventos: 0
     });
 
-    // Animação dos números
     useEffect(() => {
         const targets = {
             avaliacoes: 12847,
@@ -19,7 +18,7 @@ export default function RelatorioPublico() {
             eventos: 1205
         };
 
-        const duration = 2000; // 2 segundos
+        const duration = 2000;
         const steps = 60;
         const stepDuration = duration / steps;
 
@@ -45,190 +44,217 @@ export default function RelatorioPublico() {
         return () => clearInterval(timer);
     }, []);
 
+    const formatNumber = (num) => {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#667eea] via-[#764ba2] to-[#f093fb]">
+        <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <header className="bg-black/20 backdrop-blur-sm border-b border-white/10">
-                <div className="container mx-auto flex items-center justify-between px-6 py-4">
-                    <Link href="/" className="flex items-center gap-4 text-white hover:text-white/80 transition-colors">
+            <header className="bg-white shadow-sm border-b border-gray-200">
+                <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+                    <Link href="/" className="flex items-center gap-3 text-gray-900 hover:text-gray-600 transition-colors">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
-                        <span className="font-bold text-lg">UniScore</span>
+                        <span className="font-bold text-xl">UniScore</span>
                     </Link>
 
-                    <nav className="hidden md:flex gap-8 text-sm">
-                        <Link href="/forum" className="hover:underline flex items-center gap-1 text-white">
+                    <nav className="hidden md:flex gap-8 text-sm font-medium">
+                        <Link href="/forum" className="text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-2">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
                             </svg>
                             Fórum
                         </Link>
-                        <Link href="/o-que-fazemos" className="hover:underline text-white">O que fazemos</Link>
+                        <Link href="/o-que-fazemos" className="text-gray-600 hover:text-blue-600 transition-colors">O que fazemos</Link>
                     </nav>
 
-                    <div className="w-20"></div>
+                    <div className="flex items-center gap-2 bg-green-50 px-3 py-2 rounded-lg">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-green-700 text-sm font-medium">Ao vivo</span>
+                    </div>
                 </div>
             </header>
 
-            {/* Hero Section */}
-            <div className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-black/20"></div>
-                <div className="relative z-10 container mx-auto px-6 pt-20 pb-16">
-                    <div className="text-center mb-16">
-                        <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                            Relatório <span className="bg-gradient-to-r from-[#ffe066] to-[#ff6b6b] bg-clip-text text-transparent">Público</span>
-                        </h1>
-                        <p className="text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
-                            Impacto intercultural no ensino superior brasileiro
-                        </p>
-                        <div className="mt-8 inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30">
-                            <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                            <span className="text-white font-bold">Dados atualizados em tempo real</span>
-                        </div>
-                    </div>
+            {/* Page Title */}
+            <div className="bg-white border-b border-gray-200">
+                <div className="max-w-7xl mx-auto px-6 py-8">
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard de Relatórios</h1>
+                    <p className="text-gray-600">Transparência e impacto intercultural no ensino superior brasileiro</p>
                 </div>
             </div>
 
-            <div className="container mx-auto px-6 -mt-8 relative z-20">
-                {/* Principais Métricas */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                    <div className="bg-gradient-to-br from-green-400/20 to-green-600/20 backdrop-blur-sm rounded-3xl p-8 border border-green-400/30 text-center group hover:scale-105 transition-all duration-300">
-                        <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <div className="text-3xl">⭐</div>
+            <div className="max-w-7xl mx-auto px-6 py-8">
+                {/* Principais Métricas - Estilo do template */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    {/* Avaliações - Pink/Magenta */}
+                    <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all hover:scale-105 duration-300">
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="text-white">
+                                <div className="text-sm font-medium opacity-90 mb-2">AVALIAÇÕES</div>
+                                <div className="text-4xl font-bold mb-1">{formatNumber(animatedStats.avaliacoes)}</div>
+                                <div className="text-xs opacity-75">12% este mês</div>
+                            </div>
+                            <div className="w-14 h-14 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                </svg>
+                            </div>
                         </div>
-                        <div className="text-4xl font-bold text-white mb-2">{animatedStats.avaliacoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
-                        <div className="text-white/80 text-lg">Avaliações Coletadas</div>
-                        <div className="text-green-300 text-sm mt-2">+847 este mês</div>
+                        <div className="flex items-center gap-1 text-white text-xs">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                            <span className="font-medium">+847 este mês</span>
+                        </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-blue-400/20 to-blue-600/20 backdrop-blur-sm rounded-3xl p-8 border border-blue-400/30 text-center group hover:scale-105 transition-all duration-300">
-                        <div className="w-20 h-20 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <div className="text-3xl">🏛️</div>
+                    {/* Universidades - Cyan/Turquesa */}
+                    <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all hover:scale-105 duration-300">
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="text-white">
+                                <div className="text-sm font-medium opacity-90 mb-2">UNIVERSIDADES</div>
+                                <div className="text-4xl font-bold mb-1">{animatedStats.universidades}</div>
+                                <div className="text-xs opacity-75">18% este trimestre</div>
+                            </div>
+                            <div className="w-14 h-14 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            </div>
                         </div>
-                        <div className="text-4xl font-bold text-white mb-2">{animatedStats.universidades}</div>
-                        <div className="text-white/80 text-lg">Universidades Ativas</div>
-                        <div className="text-blue-300 text-sm mt-2">+12 este trimestre</div>
+                        <div className="flex items-center gap-1 text-white text-xs">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                            <span className="font-medium">+12 novas ativas</span>
+                        </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-purple-400/20 to-purple-600/20 backdrop-blur-sm rounded-3xl p-8 border border-purple-400/30 text-center group hover:scale-105 transition-all duration-300">
-                        <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <div className="text-3xl">👥</div>
+                    {/* Usuários - Verde */}
+                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all hover:scale-105 duration-300">
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="text-white">
+                                <div className="text-sm font-medium opacity-90 mb-2">USUÁRIOS</div>
+                                <div className="text-4xl font-bold mb-1">{formatNumber(animatedStats.usuarios)}</div>
+                                <div className="text-xs opacity-75">24% esta semana</div>
+                            </div>
+                            <div className="w-14 h-14 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                            </div>
                         </div>
-                        <div className="text-4xl font-bold text-white mb-2">{animatedStats.usuarios.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
-                        <div className="text-white/80 text-lg">Usuários Registrados</div>
-                        <div className="text-purple-300 text-sm mt-2">+1.2k esta semana</div>
+                        <div className="flex items-center gap-1 text-white text-xs">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                            <span className="font-medium">+1.2k registrados</span>
+                        </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-yellow-400/20 to-yellow-600/20 backdrop-blur-sm rounded-3xl p-8 border border-yellow-400/30 text-center group hover:scale-105 transition-all duration-300">
-                        <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <div className="text-3xl">🎪</div>
+                    {/* Eventos - Amarelo/Laranja */}
+                    <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all hover:scale-105 duration-300">
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="text-white">
+                                <div className="text-sm font-medium opacity-90 mb-2">EVENTOS</div>
+                                <div className="text-4xl font-bold mb-1">{formatNumber(animatedStats.eventos)}</div>
+                                <div className="text-xs opacity-75">15% hoje</div>
+                            </div>
+                            <div className="w-14 h-14 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
                         </div>
-                        <div className="text-4xl font-bold text-white mb-2">{animatedStats.eventos.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
-                        <div className="text-white/80 text-lg">Eventos Avaliados</div>
-                        <div className="text-yellow-300 text-sm mt-2">+89 hoje</div>
+                        <div className="flex items-center gap-1 text-white text-xs">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                            <span className="font-medium">+89 avaliados</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* Gráficos de Crescimento */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                    {/* Crescimento Mensal */}
-                    <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl">
-                        <h3 className="text-3xl font-bold text-white mb-8">📈 Crescimento de Usuários</h3>
-                        <div className="h-80">
-                            <div className="flex items-end justify-between h-full gap-3">
+                {/* Gráficos */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    {/* Crescimento - Estilo do template */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-lg font-bold text-gray-900">Crescimento de Usuários</h3>
+                            <div className="flex gap-2">
+                                <button className="px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded">Mês</button>
+                                <button className="px-3 py-1 text-xs font-medium bg-blue-500 text-white rounded">Ano</button>
+                            </div>
+                        </div>
+                        <div className="h-64 relative">
+                            {/* Grid lines */}
+                            <div className="absolute inset-0 flex flex-col justify-between">
+                                {[0, 1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="border-t border-gray-100"></div>
+                                ))}
+                            </div>
+                            {/* Bars */}
+                            <div className="relative h-full flex items-end justify-between gap-2 px-2">
                                 {[
-                                    { mes: 'Jan', usuarios: 2100, crescimento: 15 },
-                                    { mes: 'Fev', usuarios: 2850, crescimento: 35 },
-                                    { mes: 'Mar', usuarios: 4200, crescimento: 47 },
-                                    { mes: 'Abr', usuarios: 6100, crescimento: 45 },
-                                    { mes: 'Mai', usuarios: 8900, crescimento: 46 },
-                                    { mes: 'Jun', usuarios: 12400, crescimento: 39 },
-                                    { mes: 'Jul', usuarios: 16800, crescimento: 35 },
-                                    { mes: 'Ago', usuarios: 21200, crescimento: 26 },
-                                    { mes: 'Set', usuarios: 25100, crescimento: 18 },
-                                    { mes: 'Out', usuarios: 28394, crescimento: 13 }
+                                    { mes: 'Jan', usuarios: 2100 },
+                                    { mes: 'Fev', usuarios: 2850 },
+                                    { mes: 'Mar', usuarios: 4200 },
+                                    { mes: 'Abr', usuarios: 6100 },
+                                    { mes: 'Mai', usuarios: 8900 },
+                                    { mes: 'Jun', usuarios: 12400 },
+                                    { mes: 'Jul', usuarios: 16800 },
+                                    { mes: 'Ago', usuarios: 21200 },
+                                    { mes: 'Set', usuarios: 25100 },
+                                    { mes: 'Out', usuarios: 28394 }
                                 ].map((item, index) => (
                                     <div key={index} className="flex-1 flex flex-col items-center group">
-                                        <div className="w-full bg-gradient-to-t from-[#667eea] to-[#764ba2] rounded-t-xl flex flex-col items-center justify-end pb-3 text-white font-bold relative hover:from-[#5a6fd8] hover:to-[#6a4190] transition-all duration-300"
-                                            style={{ height: `${(item.usuarios / 30000) * 100}%`, minHeight: '40px' }}>
-
-                                            {/* Tooltip com número de usuários */}
-                                            <div className="absolute -top-12 bg-gray-900/90 backdrop-blur-sm text-white px-3 py-2 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 whitespace-nowrap shadow-xl">
-                                                <div className="text-center">
-                                                    <div className="text-lg text-green-300">
-                                                        {item.usuarios.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                                                    </div>
-                                                    <div className="text-xs text-white/80">usuários</div>
+                                        <div className="relative w-full mb-2">
+                                            <div 
+                                                className="w-full bg-gradient-to-t from-cyan-500 to-cyan-300 rounded-t-lg transition-all duration-500 hover:from-cyan-600 hover:to-cyan-400 shadow-lg"
+                                                style={{ height: `${Math.max((item.usuarios / 28394) * 220, 20)}px` }}
+                                            >
+                                                {/* Tooltip on hover */}
+                                                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                    {formatNumber(item.usuarios)}
                                                 </div>
-                                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900/90 rotate-45"></div>
                                             </div>
-
-                                            {/* Percentual de crescimento */}
-                                            <div className="absolute -top-3 bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-xs font-bold border border-green-400/30 backdrop-blur-sm">
-                                                +{item.crescimento}%
-                                            </div>
-
-                                            {/* Valor dentro da barra para barras maiores */}
-                                            {item.usuarios > 10000 && (
-                                                <div className="text-white/90 text-xs font-bold mb-2">
-                                                    {Math.round(item.usuarios / 1000)}k
-                                                </div>
-                                            )}
                                         </div>
-
-                                        {/* Mês */}
-                                        <div className="text-white font-bold text-sm mt-3 group-hover:text-white/90 transition-colors duration-300">
-                                            {item.mes}
-                                        </div>
+                                        <span className="text-xs text-gray-600 font-medium">{item.mes}</span>
                                     </div>
                                 ))}
                             </div>
-
-                            {/* Eixo Y com referências */}
-                            <div className="flex justify-between text-white/60 text-xs mt-4 px-2">
-                                <span>0</span>
-                                <span>10k</span>
-                                <span>20k</span>
-                                <span>30k usuários</span>
-                            </div>
                         </div>
-
-                        {/* Legenda */}
-                        <div className="mt-6 flex flex-wrap gap-4 justify-center">
-                            <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-full">
-                                <div className="w-3 h-3 bg-gradient-to-r from-[#667eea] to-[#764ba2] rounded-full"></div>
-                                <span className="text-white/80 text-sm">Usuários Totais</span>
-                            </div>
-                            <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-full">
-                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                <span className="text-white/80 text-sm">% Crescimento</span>
+                        <div className="mt-4 flex items-center justify-center gap-4 text-xs text-gray-600">
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-gradient-to-r from-cyan-500 to-cyan-300 rounded"></div>
+                                <span>Usuários ativos</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Distribuição por Região */}
-                    <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl">
-                        <h3 className="text-3xl font-bold text-white mb-8">🌎 Distribuição Regional</h3>
-                        <div className="space-y-6">
+                    {/* Impacto Intercultural - Estilo do template */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 className="text-lg font-bold text-gray-900 mb-6">Impacto Intercultural</h3>
+                        <div className="space-y-5">
                             {[
-                                { regiao: 'Sudeste', porcentagem: 45, universidades: 28, cor: 'from-blue-400 to-blue-600' },
-                                { regiao: 'Sul', porcentagem: 22, universidades: 15, cor: 'from-green-400 to-green-600' },
-                                { regiao: 'Nordeste', porcentagem: 18, universidades: 12, cor: 'from-yellow-400 to-yellow-600' },
-                                { regiao: 'Centro-Oeste', porcentagem: 10, universidades: 8, cor: 'from-purple-400 to-purple-600' },
-                                { regiao: 'Norte', porcentagem: 5, universidades: 4, cor: 'from-red-400 to-red-600' }
+                                { aspecto: 'Ampliação da cosmovisão', impacto: 92, color: 'from-pink-500 to-pink-400', textColor: 'text-pink-600', bgColor: 'bg-pink-100' },
+                                { aspecto: 'Conexão intercultural', impacto: 87, color: 'from-cyan-500 to-cyan-400', textColor: 'text-cyan-600', bgColor: 'bg-cyan-100' },
+                                { aspecto: 'Valorização da interculturalidade', impacto: 95, color: 'from-green-500 to-green-400', textColor: 'text-green-600', bgColor: 'bg-green-100' },
+                                { aspecto: 'Quebra de preconceitos', impacto: 89, color: 'from-yellow-500 to-yellow-400', textColor: 'text-yellow-600', bgColor: 'bg-yellow-100' },
+                                { aspecto: 'Consciência global', impacto: 91, color: 'from-purple-500 to-purple-400', textColor: 'text-purple-600', bgColor: 'bg-purple-100' }
                             ].map((item, index) => (
-                                <div key={index} className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-white font-bold text-lg">{item.regiao}</span>
-                                        <div className="text-right">
-                                            <div className="text-white font-bold">{item.porcentagem}%</div>
-                                            <div className="text-white/60 text-sm">{item.universidades} unis</div>
-                                        </div>
+                                <div key={index}>
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-sm font-medium text-gray-700">{item.aspecto}</span>
+                                        <span className={`text-sm font-bold ${item.textColor} ${item.bgColor} px-2 py-1 rounded`}>{item.impacto}%</span>
                                     </div>
-                                    <div className="w-full bg-white/20 rounded-full h-4 overflow-hidden">
-                                        <div className={`bg-gradient-to-r ${item.cor} h-4 rounded-full transition-all duration-1000 ease-out`}
-                                            style={{ width: `${item.porcentagem}%` }}></div>
+                                    <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden shadow-inner">
+                                        <div 
+                                            className={`h-3 bg-gradient-to-r ${item.color} rounded-full transition-all duration-1000 shadow-sm`}
+                                            style={{ width: `${item.impacto}%` }}
+                                        ></div>
                                     </div>
                                 </div>
                             ))}
@@ -236,194 +262,34 @@ export default function RelatorioPublico() {
                     </div>
                 </div>
 
-                {/* Diversidade Cultural */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl mb-12">
-                    <h3 className="text-4xl font-bold text-white text-center mb-12">Interculturalidade</h3>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        {/* Impacto Cultural */}
-                        <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                            <h4 className="text-2xl font-bold text-white mb-6">🌍 Impacto Intercultural dos Eventos</h4>
-                            <div className="space-y-4">
-                                {[
-                                    { aspecto: 'Ampliação da cosmovisão', impacto: 92, icon: '🔭' },
-                                    { aspecto: 'Conexão intercultural', impacto: 87, icon: '🤝' },
-                                    { aspecto: 'Valorização da interculturalidade', impacto: 95, icon: '🌺' },
-                                    { aspecto: 'Quebra de preconceitos', impacto: 89, icon: '💡' },
-                                    { aspecto: 'Consciência global', impacto: 91, icon: '🌎' }
-                                ].map((item, index) => (
-                                    <div key={index} className="flex items-center gap-4">
-                                        <div className="text-2xl">{item.icon}</div>
-                                        <div className="flex-1">
-                                            <div className="flex justify-between items-center mb-1">
-                                                <span className="text-white font-medium">{item.aspecto}</span>
-                                                <span className="text-white font-bold">{item.impacto}%</span>
-                                            </div>
-                                            <div className="w-full bg-white/20 rounded-full h-3">
-                                                <div className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
-                                                    style={{ width: `${item.impacto}%` }}></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Diversidade dos Participantes */}
-                        <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                            <h4 className="text-2xl font-bold text-white mb-6">👥 Diversidade dos Participantes</h4>
-                            <div className="space-y-6">
-                                {[
-                                    {
-                                        categoria: 'Origem Cultural',
-                                        dados: [
-                                            { nome: 'Brasileira', valor: 68, cor: 'from-green-400 to-green-600' },
-                                            { nome: 'Latino-americana', valor: 15, cor: 'from-yellow-400 to-yellow-600' },
-                                            { nome: 'Africana/Afro-brasileira', valor: 8, cor: 'from-red-400 to-red-600' },
-                                            { nome: 'Asiática', valor: 5, cor: 'from-blue-400 to-blue-600' },
-                                            { nome: 'Europeia/Outras', valor: 4, cor: 'from-purple-400 to-purple-600' }
-                                        ]
-                                    }
-                                ].map((grupo, groupIndex) => (
-                                    <div key={groupIndex}>
-                                        <h5 className="text-lg font-bold text-white mb-3">{grupo.categoria}</h5>
-                                        <div className="space-y-2">
-                                            {grupo.dados.map((item, index) => (
-                                                <div key={index} className="flex items-center justify-between">
-                                                    <span className="text-white/90 text-sm">{item.nome}</span>
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="w-16 bg-white/20 rounded-full h-2">
-                                                            <div className={`bg-gradient-to-r ${item.cor} h-2 rounded-full transition-all duration-1000 ease-out`}
-                                                                style={{ width: `${item.valor * 2}%` }}></div>
-                                                        </div>
-                                                        <span className="text-white font-bold text-sm w-8">{item.valor}%</span>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Eventos por Categoria Cultural */}
-                    <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                        <h4 className="text-2xl font-bold text-white mb-6 text-center">🎭 Eventos por Categoria Cultural</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                            {[
-                                { tipo: 'Multiculturais', quantidade: 234, icon: '🌍', cor: 'from-blue-400 to-blue-600' },
-                                { tipo: 'Indígenas', quantidade: 89, icon: '🪶', cor: 'from-green-400 to-green-600' },
-                                { tipo: 'Afro-brasileiros', quantidade: 156, icon: '👑', cor: 'from-yellow-400 to-yellow-600' },
-                                { tipo: 'Asiáticos', quantidade: 67, icon: '🏮', cor: 'from-red-400 to-red-600' },
-                                { tipo: 'Latinos', quantidade: 123, icon: '💃', cor: 'from-purple-400 to-purple-600' },
-                                { tipo: 'Religiosos', quantidade: 112, icon: '🕊️', cor: 'from-cyan-400 to-cyan-600' },
-                                { tipo: 'Inclusivos', quantidade: 98, icon: '🤝', cor: 'from-pink-400 to-pink-600' }
-                            ].map((evento, index) => (
-                                <div key={index} className={`bg-gradient-to-br ${evento.cor}/20 rounded-2xl p-4 text-center border border-white/10 hover:scale-105 transition-all duration-300`}>
-                                    <div className="text-3xl mb-2">{evento.icon}</div>
-                                    <div className="text-xl font-bold text-white">{evento.quantidade}</div>
-                                    <div className="text-white/80 text-xs">{evento.tipo}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Métricas de Qualidade */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl mb-12">
-                    <h3 className="text-4xl font-bold text-white text-center mb-12">🏆 Métricas de Qualidade</h3>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                        <div className="text-center">
-                            <div className="w-24 h-24 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <div className="text-4xl">🎯</div>
-                            </div>
-                            <div className="text-5xl font-bold text-white mb-2">4.8/5</div>
-                            <div className="text-white/80 text-xl">Nota Média Global</div>
-                            <div className="text-green-300 mt-2">↗️ +0.3 este ano</div>
-                        </div>
-
-                        <div className="text-center">
-                            <div className="w-24 h-24 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <div className="text-4xl">💬</div>
-                            </div>
-                            <div className="text-5xl font-bold text-white mb-2">94%</div>
-                            <div className="text-white/80 text-xl">Taxa de Satisfação</div>
-                            <div className="text-blue-300 mt-2">↗️ +2% este mês</div>
-                        </div>
-
-                        <div className="text-center">
-                            <div className="w-24 h-24 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <div className="text-4xl">🔄</div>
-                            </div>
-                            <div className="text-5xl font-bold text-white mb-2">87%</div>
-                            <div className="text-white/80 text-xl">Taxa de Retorno</div>
-                            <div className="text-purple-300 mt-2">↗️ +5% este trimestre</div>
-                        </div>
-                    </div>
-
-                    {/* Distribuição de Notas */}
-                    <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                        <h4 className="text-2xl font-bold text-white mb-6 text-center">⭐ Distribuição de Avaliações</h4>
+                {/* Categorias Culturais & Distribuição Regional */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    {/* Categorias - Estilo colorido */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 className="text-lg font-bold text-gray-900 mb-6">Categorias Culturais Mais Avaliadas</h3>
                         <div className="space-y-4">
                             {[
-                                { estrelas: 5, quantidade: 6723, porcentagem: 52 },
-                                { estrelas: 4, quantidade: 4111, porcentagem: 32 },
-                                { estrelas: 3, quantidade: 1670, porcentagem: 13 },
-                                { estrelas: 2, quantidade: 257, porcentagem: 2 },
-                                { estrelas: 1, quantidade: 129, porcentagem: 1 }
+                                { categoria: 'Intercâmbio Internacional', total: 3847, color: 'from-pink-500 to-pink-600', icon: '🌍' },
+                                { categoria: 'Diversidade Cultural', total: 2934, color: 'from-cyan-500 to-cyan-600', icon: '🎨' },
+                                { categoria: 'Línguas Estrangeiras', total: 2105, color: 'from-green-500 to-green-600', icon: '🗣️' },
+                                { categoria: 'Arte e Música Internacional', total: 1678, color: 'from-yellow-500 to-orange-500', icon: '🎵' },
+                                { categoria: 'Culinária Mundial', total: 1425, color: 'from-purple-500 to-purple-600', icon: '🍜' },
+                                { categoria: 'Tradições Regionais', total: 858, color: 'from-blue-500 to-blue-600', icon: '🎭' }
                             ].map((item, index) => (
-                                <div key={index} className="flex items-center gap-4">
-                                    <div className="flex items-center gap-1 w-16">
-                                        <span className="text-white font-bold text-lg">{item.estrelas}</span>
-                                        <span className="text-yellow-300 text-lg">★</span>
-                                    </div>
-                                    <div className="flex-1 bg-white/20 rounded-full h-6 relative overflow-hidden">
-                                        <div
-                                            className="bg-gradient-to-r from-yellow-400 to-yellow-600 h-6 rounded-full transition-all duration-1000 ease-out relative"
-                                            style={{ width: `${item.porcentagem}%` }}
-                                        >
-                                            <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
-                                        </div>
-                                    </div>
-                                    <div className="text-white/90 text-sm w-20">{item.quantidade.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
-                                    <div className="text-white font-bold text-lg w-16">{item.porcentagem}%</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Rankings e Destaques */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                    {/* Top Universidades */}
-                    <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl">
-                        <h3 className="text-3xl font-bold text-white mb-8">🏅 Top Universidades</h3>
-                        <div className="space-y-4">
-                            {[
-                                { nome: 'USP', nota: 4.9, avaliacoes: 1247, posicao: 1 },
-                                { nome: 'UNICAMP', nota: 4.8, avaliacoes: 983, posicao: 2 },
-                                { nome: 'UFRJ', nota: 4.7, avaliacoes: 856, posicao: 3 },
-                                { nome: 'PUC-SP', nota: 4.7, avaliacoes: 734, posicao: 4 },
-                                { nome: 'UFMG', nota: 4.6, avaliacoes: 692, posicao: 5 }
-                            ].map((uni, index) => (
-                                <div key={index} className="bg-white/5 rounded-2xl p-4 border border-white/10 flex items-center gap-4 hover:bg-white/10 transition-all duration-300">
-                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${uni.posicao === 1 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900' :
-                                        uni.posicao === 2 ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white' :
-                                            uni.posicao === 3 ? 'bg-gradient-to-r from-orange-400 to-orange-600 text-white' :
-                                                'bg-white/20 text-white'
-                                        }`}>
-                                        {uni.posicao}
+                                <div key={index} className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <div className={`w-10 h-10 bg-gradient-to-br ${item.color} rounded-lg flex items-center justify-center text-lg shadow-md`}>
+                                        {item.icon}
                                     </div>
                                     <div className="flex-1">
-                                        <div className="text-white font-bold text-lg">{uni.nome}</div>
-                                        <div className="text-white/70 text-sm">{uni.avaliacoes} avaliações</div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="flex items-center gap-1 text-yellow-300">
-                                            <span className="text-white font-bold text-xl">{uni.nota}</span>
-                                            <span>★</span>
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="text-sm font-medium text-gray-700">{item.categoria}</span>
+                                            <span className="text-sm font-bold text-gray-900">{formatNumber(item.total)}</span>
+                                        </div>
+                                        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                            <div 
+                                                className={`h-2 bg-gradient-to-r ${item.color} rounded-full transition-all duration-700 shadow-sm`}
+                                                style={{ width: `${(item.total / 3847) * 100}%` }}
+                                            ></div>
                                         </div>
                                     </div>
                                 </div>
@@ -431,66 +297,69 @@ export default function RelatorioPublico() {
                         </div>
                     </div>
 
-                    {/* Eventos em Destaque */}
-                    <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl">
-                        <h3 className="text-3xl font-bold text-white mb-8">🔥 Eventos em Destaque</h3>
+                    {/* Distribuição Regional - Estilo colorido */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 className="text-lg font-bold text-gray-900 mb-6">Distribuição Regional</h3>
                         <div className="space-y-4">
                             {[
-                                { nome: 'TechWeek 2024', uni: 'USP', participantes: 2847, nota: 4.9 },
-                                { nome: 'Startup Summit', uni: 'UNICAMP', participantes: 1923, nota: 4.8 },
-                                { nome: 'Innovation Fair', uni: 'UFRJ', participantes: 1654, nota: 4.8 },
-                                { nome: 'Career Day', uni: 'PUC-SP', participantes: 1432, nota: 4.7 },
-                                { nome: 'Science Festival', uni: 'UFMG', participantes: 1287, nota: 4.7 }
-                            ].map((evento, index) => (
-                                <div key={index} className="bg-white/5 rounded-2xl p-4 border border-white/10 hover:bg-white/10 transition-all duration-300">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="text-white font-bold text-lg">{evento.nome}</div>
-                                        <div className="flex items-center gap-1 text-yellow-300">
-                                            <span className="text-white font-bold">{evento.nota}</span>
-                                            <span>★</span>
+                                { regiao: 'Sudeste', universidades: 28, porcentagem: 42, color: 'from-pink-500 to-pink-600' },
+                                { regiao: 'Sul', universidades: 15, porcentagem: 22, color: 'from-cyan-500 to-cyan-600' },
+                                { regiao: 'Nordeste', universidades: 12, porcentagem: 18, color: 'from-green-500 to-green-600' },
+                                { regiao: 'Centro-Oeste', universidades: 7, porcentagem: 10, color: 'from-yellow-500 to-orange-500' },
+                                { regiao: 'Norte', universidades: 5, porcentagem: 8, color: 'from-purple-500 to-purple-600' }
+                            ].map((item, index) => (
+                                <div key={index} className="flex items-center justify-between hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                    <div className="flex items-center gap-3 flex-1">
+                                        <span className="text-sm font-medium text-gray-700 w-32">{item.regiao}</span>
+                                        <div className="flex-1 bg-gray-100 rounded-full h-9 overflow-hidden shadow-inner">
+                                            <div 
+                                                className={`bg-gradient-to-r ${item.color} h-9 rounded-full flex items-center justify-end pr-3 transition-all duration-700 shadow-sm`}
+                                                style={{ width: `${item.porcentagem}%` }}
+                                            >
+                                                <span className="text-xs font-bold text-white">{item.porcentagem}%</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between text-white/70 text-sm">
-                                        <span>{evento.uni}</span>
-                                        <span>{evento.participantes} participantes</span>
-                                    </div>
+                                    <span className="text-sm font-bold text-gray-900 ml-3 bg-gray-100 px-3 py-1 rounded-full">{item.universidades}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Impacto Social */}
-                <div className="bg-gradient-to-r from-[#ffe066] to-[#ff6b6b] rounded-3xl p-12 text-center shadow-2xl mb-12">
-                    <h3 className="text-5xl font-bold text-gray-900 mb-8">💫 Nosso Impacto</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                        <div>
-                            <div className="text-4xl font-bold text-gray-900 mb-2">15M+</div>
-                            <div className="text-gray-800 text-lg">Visualizações de Eventos</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl font-bold text-gray-900 mb-2">89%</div>
-                            <div className="text-gray-800 text-lg">Eventos Melhorados</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl font-bold text-gray-900 mb-2">R$ 2.3M</div>
-                            <div className="text-gray-800 text-lg">Economia em Pesquisas</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl font-bold text-gray-900 mb-2">94%</div>
-                            <div className="text-gray-800 text-lg">Recomendação NPS</div>
-                        </div>
+                {/* Avaliações Recentes */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-6">Avaliações Recentes</h3>
+                    <div className="space-y-4">
+                        {[
+                            { usuario: 'Maria Silva', universidade: 'USP', nota: 5, tempo: '2 min atrás', evento: 'Semana de Inovação' },
+                            { usuario: 'João Santos', universidade: 'UFRJ', nota: 4, tempo: '15 min atrás', evento: 'Festival Cultural' },
+                            { usuario: 'Ana Costa', universidade: 'UFMG', nota: 5, tempo: '32 min atrás', evento: 'Encontro Internacional' },
+                            { usuario: 'Pedro Lima', universidade: 'Mackenzie', nota: 4, tempo: '1 hora atrás', evento: 'Tech Summit' }
+                        ].map((item, index) => (
+                            <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                                        {item.usuario.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium text-gray-900">{item.usuario}</div>
+                                        <div className="text-xs text-gray-500">{item.universidade} • {item.evento}</div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <svg key={i} className={`w-4 h-4 ${i < item.nota ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                            </svg>
+                                        ))}
+                                    </div>
+                                    <span className="text-xs text-gray-500">{item.tempo}</span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    <p className="text-xl text-gray-800 max-w-4xl mx-auto mb-8">
-                        Transformando a experiência universitária através de feedback transparente e dados confiáveis
-                    </p>
-                    <Link
-                        href="/"
-                        className="bg-gray-900 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-800 transition-all duration-300 shadow-xl inline-flex items-center gap-2"
-                    >
-                        <span>🏠</span>
-                        Voltar ao Início
-                    </Link>
                 </div>
             </div>
         </div>

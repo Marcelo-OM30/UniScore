@@ -54,7 +54,7 @@ export default function DetalhesEvento() {
                 <div className="mt-6 flex gap-2">
                     <button
                         className="bg-blue-500 text-white px-4 py-2 rounded"
-                        onClick={() => router.push(`/evento/${eventoId}/avaliar`)}
+                        onClick={() => router.push('/avaliar')}
                     >
                         Avaliar
                     </button>
