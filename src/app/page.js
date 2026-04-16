@@ -1,12 +1,27 @@
 
 
+
 "use client";
+import { Suspense } from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { auth, db } from "../firebase";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+
+function SuccessMessage() {
+  const searchParams = useSearchParams();
+  const sucesso = searchParams.get("sucesso") === "1";
+
+  if (!sucesso) return null;
+
+  return (
+    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative max-w-lg mx-auto mt-6 mb-2 text-center">
+      Avaliação enviada com sucesso!
+    </div>
+  );
+}
 
 function EventosDaUniversidade({ uni }) {
   const [eventos, setEventos] = useState([]);
@@ -65,8 +80,6 @@ function EventosDaUniversidade({ uni }) {
 export default function Home() {
   const [search, setSearch] = useState("");
   const [universidades, setUniversidades] = useState([]);
-  const searchParams = useSearchParams();
-  const sucesso = searchParams.get("sucesso") === "1";
   const [suggestions, setSuggestions] = useState([]);
   const [selectedUni, setSelectedUni] = useState(null);
   const [user, setUser] = useState(null);
@@ -415,6 +428,9 @@ export default function Home() {
 
 
       <main className="px-4 py-8 max-w-5xl mx-auto">
+        <Suspense fallback={null}>
+          <SuccessMessage />
+        </Suspense>
         {/* Universidade selecionada */}
         {selectedUni ? (
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-8 mb-8">
@@ -560,11 +576,6 @@ export default function Home() {
             </div>
           )}
         </div>
-        {sucesso && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative max-w-lg mx-auto mt-6 mb-2 text-center">
-            Avaliação enviada com sucesso!
-          </div>
-        )}
       </main>
 
       {/* Botão Flutuante do Fórum */}
