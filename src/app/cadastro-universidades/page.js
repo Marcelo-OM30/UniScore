@@ -96,7 +96,7 @@ export default function CadastroUniversidades() {
                 <div className="max-w-2xl mx-auto">
                     <div className="text-center mb-8">
                         <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
-                            Cadastro <span className="text-red-600">Institucional</span>
+                            Cadastro <span className="text-red-600">institucional</span>
                         </h2>
                         <p className="text-xl text-gray-600">
                             Torne-se uma universidade parceira da UniScore
@@ -260,7 +260,7 @@ export default function CadastroUniversidades() {
                                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
                                     </svg>
                                     <div className="text-sm text-blue-900 leading-relaxed">
-                                        <strong>Processo de Aprovação:</strong> Após o envio, nossa equipe irá revisar sua solicitação.
+                                        <strong>Processo de aprovação:</strong> Após o envio, nossa equipe irá revisar sua solicitação.
                                         O processo pode levar até 3 dias úteis. Você receberá um email com o resultado.
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@ export default function CadastroUniversidades() {
                                         Enviando solicitação...
                                     </div>
                                 ) : (
-                                    "Solicitar Parceria"
+                                    "Solicitar parceria"
                                 )}
                             </button>
 

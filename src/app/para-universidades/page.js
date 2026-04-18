@@ -54,7 +54,7 @@ export default function ParaUniversidades() {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <button className="bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-lg font-bold text-lg shadow-lg hover:from-red-700 hover:to-red-800 transition-all">
-                                    Agendar uma demo
+                                    Agendar uma demonstração
                                 </button>
                             </div>
                         </div>

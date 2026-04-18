@@ -47,9 +47,9 @@ export default function OQueFazemos() {
                 {/* Video Section */}
                 <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm mb-12">
                     <div className="text-center mb-8">
-                        <h2 className="text-4xl font-bold text-gray-900 mb-4">Conheça Nossa Plataforma</h2>
+                        <h2 className="text-4xl font-bold text-gray-900 mb-4">Conheça nossa plataforma</h2>
                         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            Descubra como o UniScore conecta culturas através de avaliações transparentes de eventos universitários
+                            Descubra como o UniScore conecta culturas através de avaliações transparentes feitas pela comunidade acadêmica
                         </p>
                     </div>
 
@@ -79,7 +79,7 @@ export default function OQueFazemos() {
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-3xl font-bold text-gray-900">Nossa Missão</h3>
+                                <h3 className="text-3xl font-bold text-gray-900">Nossa missão</h3>
                                 <p className="text-gray-600">Conectando culturas através de eventos universitários</p>
                             </div>
                         </div>
@@ -98,7 +98,7 @@ export default function OQueFazemos() {
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="text-3xl font-bold text-gray-900">Impacto dos Eventos</h3>
+                                <h3 className="text-3xl font-bold text-gray-900">Impacto dos eventos</h3>
                                 <p className="text-gray-600">Avalie e compartilhe experiências</p>
                             </div>
                         </div>
@@ -181,7 +181,7 @@ export default function OQueFazemos() {
 
                 {/* Impact Stats */}
                 <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm mb-12">
-                    <h3 className="text-4xl font-bold text-gray-900 text-center mb-12">Nosso Impacto</h3>
+                    <h3 className="text-4xl font-bold text-gray-900 text-center mb-12">Nosso impacto</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                         <div className="text-center">

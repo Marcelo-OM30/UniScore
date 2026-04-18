@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth, db } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 
 export default function AvaliarEvento() {
@@ -14,7 +15,7 @@ export default function AvaliarEvento() {
     const [todosEventos, setTodosEventos] = useState([]);
     const [eventos, setEventos] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [imagem, setImagem] = useState(null);
+    const [imagemFile, setImagemFile] = useState(null);
     const [imagemPreview, setImagemPreview] = useState(null);
     
     const [avaliacao, setAvaliacao] = useState({
@@ -133,6 +134,13 @@ export default function AvaliarEvento() {
 
         setLoading(true);
         try {
+            let imagemUrl = null;
+            if (imagemFile) {
+                const storageRef = ref(storage, `avaliacoes/${user.uid}/${Date.now()}_${imagemFile.name}`);
+                await uploadBytes(storageRef, imagemFile);
+                imagemUrl = await getDownloadURL(storageRef);
+            }
+
             const avaliacaoData = {
                 universidadeId: String(avaliacao.universidadeId),
                 eventoId: String(avaliacao.eventoId),
@@ -140,7 +148,7 @@ export default function AvaliarEvento() {
                 titulo: avaliacao.titulo || '',
                 comentario: avaliacao.comentario || '',
                 data: avaliacao.data,
-                imagem: avaliacao.imagem || null,
+                imagem: imagemUrl,
                 usuario: user.displayName || user.email || 'Usuário',
                 usuarioId: user.uid,
                 photoURL: user.photoURL || null,
@@ -235,7 +243,7 @@ export default function AvaliarEvento() {
                 <div className="relative z-10 container mx-auto px-6 py-12">
                     <div className="text-center mb-8">
                         <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
-                            Avalie sua <span className="bg-gradient-to-r from-yellow-300 to-green-400 bg-clip-text text-transparent">Universidade</span>
+                            Avalie sua <span className="bg-gradient-to-r from-yellow-300 to-green-400 bg-clip-text text-transparent">universidade</span>
                         </h1>
                         <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
                             Registre sua opinião sobre eventos acadêmicos, culturais e esportivos da sua universidade
@@ -279,8 +287,7 @@ export default function AvaliarEvento() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                         </svg>
                                     </div>
-                                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Avaliação Geral do Evento</h2>
-                                    <p className="text-gray-600">Como você avalia este evento de forma geral?</p>
+                                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Avaliação geral do evento</h2>
                                 </div>
 
                                 {/* Universidade e Evento */}
@@ -337,7 +344,7 @@ export default function AvaliarEvento() {
                                             <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                             </svg>
-                                            Data do Evento
+                                            Data do evento
                                         </label>
                                         <input
                                             type="date"
@@ -355,13 +362,38 @@ export default function AvaliarEvento() {
                                             </svg>
                                             Imagem (opcional)
                                         </label>
-                                        <input
-                                            type="text"
-                                            value={avaliacao.imagem || ''}
-                                            onChange={(e) => setAvaliacao({ ...avaliacao, imagem: e.target.value })}
-                                            placeholder="Nome da imagem (ex: evento1.png)"
-                                            className="w-full bg-white text-gray-900 rounded-lg p-3 border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none placeholder-gray-400"
-                                        />
+                                        <label className="flex items-center justify-center gap-2 bg-white border-2 border-dashed border-gray-300 hover:border-pink-400 text-gray-600 hover:text-pink-600 px-4 py-3 rounded-lg cursor-pointer transition-colors">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                            </svg>
+                                            <span className="text-sm font-medium">
+                                                {imagemFile ? imagemFile.name : 'Escolher imagem'}
+                                            </span>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={(e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file) {
+                                                        setImagemFile(file);
+                                                        setImagemPreview(URL.createObjectURL(file));
+                                                    }
+                                                }}
+                                            />
+                                        </label>
+                                        {imagemPreview && (
+                                            <div className="mt-3 relative">
+                                                <img src={imagemPreview} alt="Preview" className="w-full h-32 object-cover rounded-lg border border-gray-200" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { setImagemFile(null); setImagemPreview(null); }}
+                                                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -372,7 +404,7 @@ export default function AvaliarEvento() {
                                             <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                             </svg>
-                                            Nota Geral do Evento
+                                            Nota geral do evento
                                         </label>
                                         {renderStars(avaliacao.nota, (nota) => setAvaliacao({ ...avaliacao, nota }))}
                                         <div className="text-gray-600 text-sm mt-3">
@@ -386,22 +418,24 @@ export default function AvaliarEvento() {
                                             <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
                                             </svg>
-                                            Categoria Cultural
+                                            Categoria cultural
                                         </label>
-                                        <select
-                                            value={avaliacao.categoria}
-                                            onChange={(e) => setAvaliacao({ ...avaliacao, categoria: e.target.value })}
-                                            className="w-full bg-white text-gray-900 rounded-lg p-3 border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
-                                        >
-                                            <option value="multicultural">Multicultural</option>
-                                            <option value="indigena">Indígena</option>
-                                            <option value="afro-brasileiro">Afro-brasileiro</option>
-                                            <option value="asiatico">Asiático</option>
-                                            <option value="latino">Latino-americano</option>
-                                            <option value="inclusivo">Inclusivo</option>
-                                            <option value="religioso">Religioso/Espiritual</option>
-                                            <option value="outro">Outro</option>
-                                        </select>
+                                        <p className="text-gray-700 text-sm mb-4">O evento incentivou a interação entre pessoas de diferentes origens culturais, sociais ou acadêmicas?</p>
+                                        <div className="flex flex-col gap-3">
+                                            {["Sim", "Parcialmente", "Não"].map(opcao => (
+                                                <label key={opcao} className="flex items-center gap-3 cursor-pointer">
+                                                    <input
+                                                        type="radio"
+                                                        name="categoriaInteracao"
+                                                        value={opcao}
+                                                        checked={avaliacao.categoria === opcao}
+                                                        onChange={(e) => setAvaliacao({ ...avaliacao, categoria: e.target.value })}
+                                                        className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+                                                    />
+                                                    <span className="text-gray-800 font-medium">{opcao}</span>
+                                                </label>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -450,7 +484,7 @@ export default function AvaliarEvento() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                         </svg>
                                     </div>
-                                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Impacto Intercultural</h2>
+                                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Impacto intercultural</h2>
                                     <p className="text-gray-600">Como este evento influenciou sua perspectiva cultural?</p>
                                 </div>
 
@@ -463,11 +497,11 @@ export default function AvaliarEvento() {
                                             </svg>
                                         </div>
                                         <label className="block text-gray-900 font-bold mb-4">
-                                            Diversidade Promovida
+                                            Diversidade promovida
                                         </label>
                                         {renderStars(avaliacao.diversidadePromovida, (nota) => setAvaliacao({ ...avaliacao, diversidadePromovida: nota }))}
                                         <p className="text-gray-600 text-sm mt-3">
-                                            O evento valorizou diferentes culturas?
+                                            O evento contemplou múltiplas culturas e visões de mundo?
                                         </p>
                                     </div>
 
@@ -480,7 +514,7 @@ export default function AvaliarEvento() {
                                             </svg>
                                         </div>
                                         <label className="block text-gray-900 font-bold mb-4">
-                                            Ampliação da Cosmovisão
+                                            Ampliação da cosmovisão
                                         </label>
                                         {renderStars(avaliacao.ampliacaoCosmivisao, (nota) => setAvaliacao({ ...avaliacao, ampliacaoCosmivisao: nota }))}
                                         <p className="text-gray-600 text-sm mt-3">
@@ -496,11 +530,11 @@ export default function AvaliarEvento() {
                                             </svg>
                                         </div>
                                         <label className="block text-gray-900 font-bold mb-4">
-                                            Conexão Intercultural
+                                            Conexão intercultural
                                         </label>
                                         {renderStars(avaliacao.conexaoIntercultural, (nota) => setAvaliacao({ ...avaliacao, conexaoIntercultural: nota }))}
                                         <p className="text-gray-600 text-sm mt-3">
-                                            Facilitou conexões entre culturas?
+                                            O evento incentivou a interação entre pessoas de diferentes culturas?
                                         </p>
                                     </div>
                                 </div>
@@ -511,7 +545,7 @@ export default function AvaliarEvento() {
                                         <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                         </svg>
-                                        Impacto na sua Identidade Cultural
+                                        Impacto na sua identidade cultural
                                     </label>
                                     <textarea
                                         value={avaliacao.identidadeCultural}
@@ -528,12 +562,12 @@ export default function AvaliarEvento() {
                                         <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                                         </svg>
-                                        Mudanças de Perspectiva
+                                        Mudanças de perspectiva
                                     </label>
                                     <textarea
                                         value={avaliacao.mudancaPerspectiva}
                                         onChange={(e) => setAvaliacao({ ...avaliacao, mudancaPerspectiva: e.target.value })}
-                                        placeholder="Que preconceitos foram quebrados? Que novas perspectivas você adquiriu sobre outras culturas?"
+                                        placeholder="Que novas perspectivas você adquiriu sobre outras culturas?"
                                         rows={4}
                                         className="w-full bg-white text-gray-900 rounded-lg p-4 border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none placeholder-gray-400 resize-none"
                                     />
